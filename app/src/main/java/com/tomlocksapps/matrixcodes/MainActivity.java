@@ -2,12 +2,10 @@ package com.tomlocksapps.matrixcodes;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -25,68 +23,36 @@ import java.util.Map;
 public class MainActivity extends Activity {
 
 
-
     private FrameLayout preview;
     private CameraHelper cameraHelper;
 
     private Camera.PictureCallback pictureCallback = new Camera.PictureCallback() {
         @Override
-        public void onPictureTaken(byte[] data, Camera camera) {
+        public void onPictureTaken(final byte[] data, final Camera camera) {
 
-            Camera.Size size = camera.getParameters().getPictureSize();
 
-            Camera.Parameters parameters = camera.getParameters();
 
-            Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
 
-            int[] pixels = new int[bmp.getWidth()*bmp.getHeight()];
+                    Camera.Size size = camera.getParameters().getPictureSize();
 
-            bmp.getPixels(pixels, 0, bmp.getWidth(), 0 , 0 , bmp.getWidth() , bmp.getHeight());
+                    Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
 
-            String result = decode(pixels, size, null);
+                    int[] pixels = new int[bmp.getWidth() * bmp.getHeight()];
 
-            if(result != null && !result.equals("")) {
-                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT ).show();
-            }
+                    bmp.getPixels(pixels, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
+
+                    String result = decode(pixels, size, null);
+
+                    if (result != null && !result.equals("")) {
+                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                    }
+
+
 
 
             camera.startPreview();
         }
     };
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-
-        if (!CameraHelper.checkCameraHardware((Context) this))
-            finish();
-
-        preview = (FrameLayout) findViewById(R.id.camera_preview);
-
-        cameraHelper = new CameraHelper(this, preview, pictureCallback);
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        cameraHelper.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        cameraHelper.onPause();
-    }
-
-
-    // will go to ZXing class
-
-  //  public static int my_YUV_TO_
 
     public static int YUV_NV21_TO_RGB(int[] argb, byte[] yuv, Camera.Size size) {
 
@@ -122,24 +88,18 @@ public class MainActivity extends Activity {
         return a;
     }
 
-
-    public static String decode(int[] pixels , Camera.Size size ,Map<DecodeHintType, Object> hints) {
-
+    public static String decode(int[] pixels, Camera.Size size, Map<DecodeHintType, Object> hints) {
 
 
-
-        LuminanceSource source = new RGBLuminanceSource( size.width, size.height ,pixels);
+        LuminanceSource source = new RGBLuminanceSource(size.width, size.height, pixels);
         BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
         MultiFormatReader barcodeReader = new MultiFormatReader();
         Result result = null;
 
 
-
-
-
         String finalResult = "";
         try {
-            if (hints != null && ! hints.isEmpty())
+            if (hints != null && !hints.isEmpty())
                 result = barcodeReader.decode(bitmap, hints);
             else
                 result = barcodeReader.decode(bitmap);
@@ -151,11 +111,44 @@ public class MainActivity extends Activity {
         }
 
 
-
-
-
         return finalResult;
         //	 return "";
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+
+        if (!CameraHelper.checkCameraHardware((Context) this))
+            finish();
+
+        preview = (FrameLayout) findViewById(R.id.camera_preview);
+
+        cameraHelper = new CameraHelper(this, preview, pictureCallback);
+
+ //       cameraHelper.setPictureSize(cameraHelper.getParameters().getSupportedPictureSizes().get(5));
+
+    }
+
+
+    // will go to ZXing class
+
+    //  public static int my_YUV_TO_
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        cameraHelper.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        cameraHelper.onPause();
     }
 
 

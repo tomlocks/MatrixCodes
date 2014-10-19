@@ -12,6 +12,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * A basic Camera preview class
@@ -20,21 +21,21 @@ public class CameraPreview extends SurfaceView implements
         SurfaceHolder.Callback {
 
     private SurfaceHolder mHolder;
-    private Camera mCamera;
+    private Camera camera;
 
-    private Camera.Size previewSize = null;
-    private int previewFormat = -1;
+    private Camera.Size previewSize;
+    private Integer previewFormat;
+
 
 
     public CameraPreview(Context context, Camera camera) {
         super(context);
+        this.camera = camera;
 
-        this.mCamera = camera;
-
-        if (previewSize == null)
-            this.previewSize = mCamera.getParameters().getSupportedPreviewSizes().get(0);
-        if (previewFormat < 0)
-            this.previewFormat = 0;
+        Camera.Parameters params = camera.getParameters();
+        
+        this.previewSize = params.getPreviewSize();
+        this.previewFormat = params.getPreviewFormat();
 
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.
@@ -46,7 +47,7 @@ public class CameraPreview extends SurfaceView implements
 
     public CameraPreview(Context context, Camera camera, Camera.Size previewSize, int previewFormat) {
         super(context);
-        this.mCamera = camera;
+        this.camera = camera;
 
         this.previewSize = previewSize;
         this.previewFormat = previewFormat;
@@ -68,10 +69,10 @@ public class CameraPreview extends SurfaceView implements
         // The Surface has been created, now tell the camera where to draw the
         // preview.
         try {
-            //	mCamera.setPreviewCallback(previewCallback);
+            //	camera.setPreviewCallback(previewCallback);
 
-            mCamera.setPreviewDisplay(holder);
-            mCamera.startPreview();
+            camera.setPreviewDisplay(holder);
+            camera.startPreview();
         } catch (IOException e) {
             Log.d(CameraPreview.this.getClass().getName(),
                     "Error setting camera preview: " + e.getMessage());
@@ -93,24 +94,24 @@ public class CameraPreview extends SurfaceView implements
 
         // stop preview before making changes
         try {
-            mCamera.stopPreview();
+            camera.stopPreview();
         } catch (Exception e) {
             // ignore: tried to stop a non-existent preview
         }
 
         // set preview size and make any resize, rotate or
         // reformatting changes here
-        mCamera.setDisplayOrientation(90);
+        camera.setDisplayOrientation(90);
 
         // start preview with new settings
         try {
-            //    mCamera.setPreviewCallback(previewCallback);
-            mCamera.setPreviewDisplay(mHolder);
-            Camera.Parameters parameters = mCamera.getParameters();
+            //    camera.setPreviewCallback(previewCallback);
+            camera.setPreviewDisplay(mHolder);
+             Camera.Parameters parameters = camera.getParameters();
             parameters.setPreviewSize(previewSize.width, previewSize.height);
-            // parameters.setPictureSize(list.get(0).width,list.get(0).height);
-            mCamera.setParameters(parameters);
-            mCamera.startPreview();
+
+            camera.setParameters(parameters);
+            camera.startPreview();
 
         } catch (Exception e) {
             Log.d(CameraPreview.this.getClass().getName(),
@@ -118,19 +119,6 @@ public class CameraPreview extends SurfaceView implements
         }
     }
 
-    public Camera.Size getPreviewSize() {
-        return previewSize;
-    }
 
-    public void setPreviewSize(Camera.Size previewSize) {
-        this.previewSize = previewSize;
-    }
 
-    public int getPreviewFormat() {
-        return previewFormat;
-    }
-
-    public void setPreviewFormat(int previewFormat) {
-        this.previewFormat = previewFormat;
-    }
 }

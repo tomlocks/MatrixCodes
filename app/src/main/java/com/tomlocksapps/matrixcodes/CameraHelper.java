@@ -2,10 +2,12 @@ package com.tomlocksapps.matrixcodes;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.hardware.Camera;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,35 +23,45 @@ public class CameraHelper {
 
     private FrameLayout preview;
 
-    // supported Sizes
-    private Camera.Size pictureSize;
-    private Camera.Size previewSize;
+    private Camera.Parameters cameraParameters;
 
-    private int pictureFormat;
-    private int previewFormat;
 
 
     CameraHelper(Context context, FrameLayout preview, final Camera.PictureCallback pictureCallback) {
         this.context = context;
         this.preview = preview;
         this.pictureCallback = pictureCallback;
-        this.camera = getCameraInstance();
 
-        Camera.Parameters params =  camera.getParameters();
 
-        this.pictureSize = params.getPictureSize();
-        this.pictureFormat = params.getPictureFormat();
+        this.camera = getCameraInstance(); // available in onResume method
 
-        this.pictureSize = params.getPreviewSize();
-        this.previewFormat = params.getPreviewFormat();
+        this.cameraParameters = camera.getParameters(); // available in onResume method
 
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                camera.takePicture(null,null,pictureCallback);
+
+                //Camera.Area focusArea = new Camera.Area();
+
+//                List<Camera.Area> lst = new ArrayList<Camera.Area>();
+
+  //              lst.add(new  Camera.Area(new Rect(10,10,-10,-10),1000));
+
+    //            cameraParameters.setFocusAreas(lst);
+
+                camera.autoFocus(new Camera.AutoFocusCallback() {
+                    @Override
+                    public void onAutoFocus(boolean success, Camera camera) {
+                        if (success)
+                            camera.takePicture(null, null, pictureCallback);
+                    }
+                });
+
             }
         });
     }
+
+
 
 
     /**
@@ -86,14 +98,23 @@ public class CameraHelper {
             camera = null;
         }
 
+
         // Create an instance of Camera
         camera = getCameraInstance();
 
+        camera.setParameters(cameraParameters);
+
         // Create our Preview view and set it as the content of our activity.
-        cameraPreview = new CameraPreview(context, camera, pictureSize, pictureFormat);
+        cameraPreview = new CameraPreview(context, camera);
 
         // List<Integer> formats =
         // camera.getParameters().getSupportedPreviewFormats();
+
+
+
+
+
+
 
         preview.addView(cameraPreview);
     }
@@ -107,38 +128,52 @@ public class CameraHelper {
             preview.removeView(cameraPreview);
             camera = null;
         }
-
     }
 
-    public Camera.Size getPictureSize() {
-        return pictureSize;
+    public Camera.Parameters getParameters() {
+        return cameraParameters;
     }
 
     public void setPictureSize(Camera.Size pictureSize) {
-        this.pictureSize = pictureSize;
+
+        cameraParameters.setPictureSize(pictureSize.width, pictureSize.height);
+
+        camera.setParameters(cameraParameters);
     }
 
-    public Camera.Size getPreviewSize() {
-        return previewSize;
-    }
 
-    public void setPreviewSize(Camera.Size previewSize) {
-        this.previewSize = previewSize;
-    }
+//    public Camera.Size getPictureSize() {
+//        return pictureSize;
+//    }
 
-    public int getPictureFormat() {
-        return pictureFormat;
-    }
-
-    public void setPictureFormat(int pictureFormat) {
-        this.pictureFormat = pictureFormat;
-    }
-
-    public int getPreviewFormat() {
-        return previewFormat;
-    }
-
-    public void setPreviewFormat(int previewFormat) {
-        this.previewFormat = previewFormat;
-    }
+//    public void setPictureSize(Camera.Size pictureSize) {
+//        this.pictureSize = pictureSize;
+//
+//    }
+//
+//    public Camera.Size getPreviewSize() {
+//        return previewSize;
+//    }
+//
+//    public void setPreviewSize(Camera.Size previewSize) {
+//        this.previewSize = previewSize;
+//    }
+//
+//    public int getPictureFormat() {
+//        return pictureFormat;
+//    }
+//
+//    public void setPictureFormat(int pictureFormat) {
+//        this.pictureFormat = pictureFormat;
+//    }
+//
+//    public int getPreviewFormat() {
+//        return previewFormat;
+//    }
+//
+//    public void setPreviewFormat(int previewFormat) {
+//        this.previewFormat = previewFormat;
+//    }
+//
+//    public List<Camera.Size> getPictureSizes() { return camera.getParameters().getSupportedPictureSizes();}
 }
