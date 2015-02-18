@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import org.opencv.core.Mat;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -26,8 +28,7 @@ public class CameraPreview extends SurfaceView implements
     private Camera.Size previewSize;
     private Integer previewFormat;
 
-
-
+ 
     public CameraPreview(Context context, Camera camera) {
         super(context);
         this.camera = camera;
@@ -105,9 +106,12 @@ public class CameraPreview extends SurfaceView implements
 
         // start preview with new settings
         try {
+
+
+
             //    camera.setPreviewCallback(previewCallback);
             camera.setPreviewDisplay(mHolder);
-             Camera.Parameters parameters = camera.getParameters();
+            Camera.Parameters parameters = camera.getParameters();
             parameters.setPreviewSize(previewSize.width, previewSize.height);
 
             camera.setParameters(parameters);

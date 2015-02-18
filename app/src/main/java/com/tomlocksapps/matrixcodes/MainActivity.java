@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -16,6 +17,12 @@ import com.google.zxing.MultiFormatReader;
 import com.google.zxing.RGBLuminanceSource;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
+
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
 
 import java.util.Map;
 
@@ -32,12 +39,29 @@ public class MainActivity extends Activity {
 
 
 
-
                     Camera.Size size = camera.getParameters().getPictureSize();
 
                     Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
 
+                 //   BitmapFactory.
+
+            // test test
+
                     int[] pixels = new int[bmp.getWidth() * bmp.getHeight()];
+
+
+
+                 Mat mat = new Mat(bmp.getWidth(), bmp.getHeight(), CvType.CV_8UC3);
+
+                mat.size();
+
+            //Mat mat;
+
+            org.opencv.android.Utils.bitmapToMat(bmp, mat);
+
+            //         Mat mat = Mat.zeros(bmp.getWidth(), bmp.getHeight(), CvType.CV_8UC3);
+
+               //     mat.put(0,0, pixels);
 
                     bmp.getPixels(pixels, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
 
@@ -97,6 +121,7 @@ public class MainActivity extends Activity {
         Result result = null;
 
 
+
         String finalResult = "";
         try {
             if (hints != null && !hints.isEmpty())
@@ -128,7 +153,7 @@ public class MainActivity extends Activity {
 
         cameraHelper = new CameraHelper(this, preview, pictureCallback);
 
- //       cameraHelper.setPictureSize(cameraHelper.getParameters().getSupportedPictureSizes().get(5));
+        cameraHelper.setPictureSize(cameraHelper.getParameters().getSupportedPictureSizes().get(5));
 
     }
 
@@ -141,6 +166,8 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
+        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_3, this, mLoaderCallback);
+
         cameraHelper.onResume();
     }
 
@@ -150,6 +177,35 @@ public class MainActivity extends Activity {
 
         cameraHelper.onPause();
     }
+
+
+    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case LoaderCallbackInterface.SUCCESS:
+                {
+                    Log.i("testTEST", "OpenCV loaded successfully");
+                    //    mOpenCvCameraView.enableView();
+
+
+
+                    Mat mat;
+
+                    mat = Mat.eye(3,3,0);
+
+                    mat = Mat.eye(3,3,1);
+
+                    Toast.makeText(getApplicationContext(), String.valueOf(mat.rows()), Toast.LENGTH_LONG).show();
+
+                } break;
+                default:
+                {
+                    super.onManagerConnected(status);
+                } break;
+            }
+        }
+    };
 
 
 }
