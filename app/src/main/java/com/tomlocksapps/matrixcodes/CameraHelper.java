@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.hardware.Camera;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,21 +23,26 @@ public class CameraHelper {
 
     private Camera.PictureCallback pictureCallback;
 
+    private Camera.PreviewCallback previewCallback;
+
     private FrameLayout preview;
 
     private Camera.Parameters cameraParameters;
 
 
 
-    CameraHelper(Context context, FrameLayout preview, final Camera.PictureCallback pictureCallback) {
+
+    CameraHelper(Context context, FrameLayout preview, final Camera.PictureCallback pictureCallback, final Camera.PreviewCallback previewCallback) {
         this.context = context;
         this.preview = preview;
         this.pictureCallback = pictureCallback;
-
+        this.previewCallback = previewCallback;
 
         this.camera = getCameraInstance(); // available in onResume method
 
         this.cameraParameters = camera.getParameters(); // available in onResume method
+
+
 
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +112,7 @@ public class CameraHelper {
         camera.setParameters(cameraParameters);
 
         // Create our Preview view and set it as the content of our activity.
-        cameraPreview = new CameraPreview(context, camera);
+        cameraPreview = new CameraPreview(context, camera, previewCallback);
 
         // List<Integer> formats =
         // camera.getParameters().getSupportedPreviewFormats();
@@ -119,6 +126,9 @@ public class CameraHelper {
         preview.addView(cameraPreview);
     }
 
+    public void setCameraPreviewCallback(final Camera.PreviewCallback previewCallback) {
+        camera.setPreviewCallback(previewCallback);
+    }
 
     protected void onPause() {
 

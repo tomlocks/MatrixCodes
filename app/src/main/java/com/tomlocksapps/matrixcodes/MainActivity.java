@@ -4,10 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.zxing.BinaryBitmap;
@@ -23,7 +27,12 @@ import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -32,6 +41,39 @@ public class MainActivity extends Activity {
 
     private FrameLayout preview;
     private CameraHelper cameraHelper;
+    private ImageView imageView;
+
+    private Camera.PreviewCallback previewCallback = new Camera.PreviewCallback() {
+
+        @Override
+        public void onPreviewFrame(final  byte[] data, final Camera camera) {
+
+if(data != null) {
+    Camera.Size size = camera.getParameters().getPreviewSize();
+
+    long start = System.currentTimeMillis();
+
+     int[] argb = new int[size.width*size.height];
+
+   // YUV_NV21_TO_RGB(argb, data, size);
+
+   // Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+
+    int[] pixels = new int[size.width*size.height];
+
+  //  int realSize = YUV_NV21_TO_RGB(pixels, data,list.get(0).width,list.get(0).height);
+
+    YUV_NV21_TO_RGB(argb, data, size);
+
+    Bitmap bmp = Bitmap.createBitmap(size.width, size.height, Bitmap.Config.ARGB_8888);
+
+    bmp.setPixels(pixels, 0, size.width, 0 , 0, size.width , size.height);
+
+    imageView.setImageBitmap(bmp);
+
+}
+        }
+    };
 
     private Camera.PictureCallback pictureCallback = new Camera.PictureCallback() {
         @Override
@@ -39,9 +81,31 @@ public class MainActivity extends Activity {
 
 
 
+
+
                     Camera.Size size = camera.getParameters().getPictureSize();
 
+                   long start = System.currentTimeMillis();
+
                     Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+
+
+            Canvas c = new Canvas();
+            Paint paint = new Paint();
+
+            paint.setColor(Color.BLACK);
+            paint.setStrokeWidth(3);
+
+            c.drawRect(50,50,200,200, paint);
+
+
+
+            preview.draw(c);
+
+
+            long end = System.currentTimeMillis() - start ;
+
+            Toast.makeText(getApplicationContext(), "" + end, Toast.LENGTH_SHORT).show();
 
                  //   BitmapFactory.
 
@@ -49,15 +113,58 @@ public class MainActivity extends Activity {
 
                     int[] pixels = new int[bmp.getWidth() * bmp.getHeight()];
 
+           //     imageView.setImageBitmap(bmp);
 
 
-                 Mat mat = new Mat(bmp.getWidth(), bmp.getHeight(), CvType.CV_8UC3);
 
-                mat.size();
+            //     Mat mat = new Mat(bmp.getWidth(), bmp.getHeight(), CvType.CV_8UC4);
+
+             //   mat.size();
+
+
+            Mat mat = new Mat(bmp.getWidth(), bmp.getHeight(), CvType.CV_8UC3);
+
+     //       mat.put(0,0,data);
+
+            org.opencv.android.Utils.bitmapToMat(bmp, mat);
+
+            Mat edges = new Mat(bmp.getWidth(), bmp.getHeight(), CvType.CV_8UC3);
+
+
+            //       mat.colRange(100, 600).setTo(Scalar.all(0));
+
+            int a = 80;
+
+            Imgproc.Canny(mat, edges, a, a*3);
+
+            Mat imgCountours = new Mat(bmp.getWidth(), bmp.getHeight(), CvType.CV_8UC3);
+
+
+           List<MatOfPoint> countours = new ArrayList<MatOfPoint>();
+
+
+            Mat hierarchy;
+
+            Imgproc.findContours(edges, countours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
+
+            Imgproc.drawContours(imgCountours, countours, 50 , Scalar.all(100));
+
+
+            Bitmap bmpFromMat = Bitmap.createBitmap(bmp);
+
+            org.opencv.android.Utils.matToBitmap(edges,bmpFromMat);
+
+//            imageView.setRotation(90);
+
+
+
+
+            imageView.setImageBitmap(bmpFromMat);
+
 
             //Mat mat;
 
-            org.opencv.android.Utils.bitmapToMat(bmp, mat);
+         //   org.opencv.android.Utils.bitmapToMat(data, mat);
 
             //         Mat mat = Mat.zeros(bmp.getWidth(), bmp.getHeight(), CvType.CV_8UC3);
 
@@ -151,9 +258,15 @@ public class MainActivity extends Activity {
 
         preview = (FrameLayout) findViewById(R.id.camera_preview);
 
-        cameraHelper = new CameraHelper(this, preview, pictureCallback);
+        imageView = (ImageView) findViewById(R.id.imageView);
 
-        cameraHelper.setPictureSize(cameraHelper.getParameters().getSupportedPictureSizes().get(5));
+        cameraHelper = new CameraHelper(this, preview, pictureCallback, previewCallback);
+
+        cameraHelper.setPictureSize(cameraHelper.getParameters().getSupportedPictureSizes().get(7));
+
+    //    cameraHelper.setCameraPreviewCallback(previewCallback);
+
+
 
     }
 
