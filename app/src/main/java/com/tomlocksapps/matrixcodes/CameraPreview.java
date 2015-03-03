@@ -11,10 +11,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import org.opencv.core.Mat;
-
 import java.io.IOException;
-import java.util.List;
 
 /**
  * A basic Camera preview class
@@ -28,13 +25,13 @@ public class CameraPreview extends SurfaceView implements
     private Camera.Size previewSize;
     private Integer previewFormat;
 
- 
+
     public CameraPreview(Context context, Camera camera) {
         super(context);
         this.camera = camera;
 
         Camera.Parameters params = camera.getParameters();
-        
+
         this.previewSize = params.getPreviewSize();
         this.previewFormat = params.getPreviewFormat();
 
@@ -108,7 +105,6 @@ public class CameraPreview extends SurfaceView implements
         try {
 
 
-
             //    camera.setPreviewCallback(previewCallback);
             camera.setPreviewDisplay(mHolder);
             Camera.Parameters parameters = camera.getParameters();
@@ -122,7 +118,6 @@ public class CameraPreview extends SurfaceView implements
                     "Error starting camera preview: " + e.getMessage());
         }
     }
-
 
 
 }

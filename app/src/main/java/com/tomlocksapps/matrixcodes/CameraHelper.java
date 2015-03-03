@@ -2,13 +2,9 @@ package com.tomlocksapps.matrixcodes;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Rect;
 import android.hardware.Camera;
 import android.view.View;
 import android.widget.FrameLayout;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Tomasz on 2014-10-12.
@@ -26,7 +22,6 @@ public class CameraHelper {
     private Camera.Parameters cameraParameters;
 
 
-
     CameraHelper(Context context, FrameLayout preview, final Camera.PictureCallback pictureCallback) {
         this.context = context;
         this.preview = preview;
@@ -41,14 +36,6 @@ public class CameraHelper {
             @Override
             public void onClick(View v) {
 
-                //Camera.Area focusArea = new Camera.Area();
-
-//                List<Camera.Area> lst = new ArrayList<Camera.Area>();
-
-  //              lst.add(new  Camera.Area(new Rect(10,10,-10,-10),1000));
-
-    //            cameraParameters.setFocusAreas(lst);
-
                 camera.autoFocus(new Camera.AutoFocusCallback() {
                     @Override
                     public void onAutoFocus(boolean success, Camera camera) {
@@ -60,8 +47,6 @@ public class CameraHelper {
             }
         });
     }
-
-
 
 
     /**
@@ -107,15 +92,6 @@ public class CameraHelper {
         // Create our Preview view and set it as the content of our activity.
         cameraPreview = new CameraPreview(context, camera);
 
-        // List<Integer> formats =
-        // camera.getParameters().getSupportedPreviewFormats();
-
-
-
-
-
-
-
         preview.addView(cameraPreview);
     }
 
@@ -142,38 +118,4 @@ public class CameraHelper {
     }
 
 
-//    public Camera.Size getPictureSize() {
-//        return pictureSize;
-//    }
-
-//    public void setPictureSize(Camera.Size pictureSize) {
-//        this.pictureSize = pictureSize;
-//
-//    }
-//
-//    public Camera.Size getPreviewSize() {
-//        return previewSize;
-//    }
-//
-//    public void setPreviewSize(Camera.Size previewSize) {
-//        this.previewSize = previewSize;
-//    }
-//
-//    public int getPictureFormat() {
-//        return pictureFormat;
-//    }
-//
-//    public void setPictureFormat(int pictureFormat) {
-//        this.pictureFormat = pictureFormat;
-//    }
-//
-//    public int getPreviewFormat() {
-//        return previewFormat;
-//    }
-//
-//    public void setPreviewFormat(int previewFormat) {
-//        this.previewFormat = previewFormat;
-//    }
-//
-//    public List<Camera.Size> getPictureSizes() { return camera.getParameters().getSupportedPictureSizes();}
 }
