@@ -43,6 +43,8 @@ public class CameraPreview extends SurfaceView implements
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
     }
 
+    // blabl;a
+
     public CameraPreview(Context context, Camera camera, Camera.Size previewSize, int previewFormat) {
         super(context);
         this.camera = camera;
