@@ -45,6 +45,8 @@ public class CameraPreview extends SurfaceView implements
 
     // blabl;a
 
+    // 2
+
     public CameraPreview(Context context, Camera camera, Camera.Size previewSize, int previewFormat) {
         super(context);
         this.camera = camera;
