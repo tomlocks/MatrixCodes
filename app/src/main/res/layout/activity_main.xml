@@ -8,6 +8,20 @@
         android:id="@+id/camera_preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
+        >
+
+
+    </FrameLayout>
+
+
+    <ImageView
+        android:layout_width="160dp"
+        android:layout_height="80dp"
+        android:id="@+id/imageViewPreview"
+        android:layout_margin="20dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+       />
+
 
 </RelativeLayout>
