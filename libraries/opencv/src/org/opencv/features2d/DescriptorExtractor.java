@@ -58,6 +58,9 @@ import java.util.List;
  */
 public class DescriptorExtractor {
 
+    private static final int
+            OPPONENTEXTRACTOR = 1000;
+
     public static final int
             SIFT = 1,
             SURF = 2,
@@ -71,8 +74,7 @@ public class DescriptorExtractor {
             OPPONENT_BRIEF = OPPONENTEXTRACTOR + BRIEF,
             OPPONENT_BRISK = OPPONENTEXTRACTOR + BRISK,
             OPPONENT_FREAK = OPPONENTEXTRACTOR + FREAK;
-    private static final int
-            OPPONENTEXTRACTOR = 1000;
+
     protected final long nativeObj;
 
 
