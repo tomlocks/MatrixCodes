@@ -77,7 +77,7 @@ boolean direction; //true - horizontal , false vertical
         Point vect1_temp = new Point();
         double vertical;
         double DistanceParam;
-        double DistanceHelper = 1;
+        double DistanceHelper = 1000;
 
 //vect declaration
         vect1.x = point1.x-point2.x;
@@ -90,7 +90,7 @@ boolean direction; //true - horizontal , false vertical
 
 
         vertical = (sqrt(vect1.x*vect1.x+vect1.y*vect1.y));
-        DistanceParam = DistanceHelper * vertical;
+        DistanceParam = DistanceHelper/ vertical;
 
         return DistanceParam;
     }
