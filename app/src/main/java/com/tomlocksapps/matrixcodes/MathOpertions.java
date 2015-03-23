@@ -3,10 +3,7 @@ package com.tomlocksapps.matrixcodes;
 
 
 
-        import android.graphics.PointF;
-
         import org.opencv.core.Point;
-
         import static java.lang.Math.*;
 
 /**
