@@ -24,7 +24,7 @@ public class MathOpertions {
          */
         public double DegreeMath(Point point1, Point point2, Point point3, float xdeg, float zdeg)
         {
-
+            zdeg=zdeg-90;
             Point vect1 = new Point();
             Point vect2 = new Point();
             Point vect1_temp = new Point();
@@ -70,7 +70,7 @@ public class MathOpertions {
 
     public static double DistanceMath(Point point1, Point point2,float xdeg, float zdeg)
     {
-
+        zdeg=zdeg-90;
         Point vect1 = new Point();
         Point vect1_temp = new Point();
         double vertical;
