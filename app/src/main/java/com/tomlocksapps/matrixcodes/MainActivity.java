@@ -67,9 +67,10 @@ public class MainActivity extends Activity {
 
                         double angle = mathOpertions.DegreeMath(finderPattern.getLeftBottom(), finderPattern.getLeftTop(), finderPattern.getRightTop(), 0 ,0 );
 
+                        double distanceParam = MathOpertions.DistanceMath(finderPattern.getLeftBottom(), finderPattern.getLeftTop(),0 ,0 );
 //                        Toast.makeText(getApplicationContext(), "leftTop: " + finderPattern.getLeftTop() + "; rightTop: " + finderPattern.getRightTop() + "; bottomLeft: " + finderPattern.getLeftBottom(), Toast.LENGTH_LONG).show();
 
-                        Log.d("FinderPattern: ", "angle: " + angle + " direction: " + mathOpertions.getDirection() + "leftTop: " + finderPattern.getLeftTop() + "; rightTop: " + finderPattern.getRightTop() + "; bottomLeft: " + finderPattern.getLeftBottom());
+                        Log.d("FinderPattern: ", "angle: " + angle + " direction: " + mathOpertions.getDirection() + "distance " + distanceParam  );
 
 
                         imageViewPreview.setImageBitmap(bmp);
