@@ -10,7 +10,8 @@ package com.tomlocksapps.matrixcodes;
  * Created by AveAmore on 2015-03-23.
  */
 public class MathOpertions {
-boolean direction; //true - horizontal , false vertical
+
+    boolean direction; //true - horizontal , false vertical
 
         /**
          *
@@ -93,7 +94,11 @@ boolean direction; //true - horizontal , false vertical
     }
 
 
-
+    public boolean getDirection() {
+        return direction;
     }
+
+
+}
 
 
