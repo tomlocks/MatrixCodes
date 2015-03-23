@@ -39,8 +39,14 @@ public class MathOpertions {
             vect1.y =  ((point1.y-point2.y)/cos(xdeg));
             vect2.x = point3.x-point2.x;
             vect2.y = ((point3.y-point2.y)/cos(xdeg));
-            vect1_temp = vect1;
-            vect2_temp = vect2;
+            vect1_temp.x = point1.x-point2.x;
+            vect1_temp.y =  ((point1.y-point2.y)/cos(xdeg));
+            vect2_temp.x = point3.x-point2.x;
+            vect2_temp.y = ((point3.y-point2.y)/cos(xdeg));
+
+
+
+
             vect1.x = (vect1_temp.x * cos(zdeg)- vect1_temp.y * sin(zdeg));
             vect1.y = (vect1_temp.x * sin(zdeg) + vect1_temp.y * cos(zdeg));
 
@@ -53,6 +59,33 @@ public class MathOpertions {
 
             return DegreeParam;
         }
+
+    public static double DistanceMath(Point point1, Point point2,float xdeg, float zdeg)
+    {
+
+        Point vect1 = new Point();
+        Point vect1_temp = new Point();
+        double vertical;
+        double DistanceParam;
+        double DistanceHelper = 1;
+
+//vect declaration
+        vect1.x = point1.x-point2.x;
+        vect1.y =  ((point1.y-point2.y)/cos(xdeg));
+        vect1_temp.x = point1.x-point2.x;
+        vect1_temp.y =  ((point1.y-point2.y)/cos(xdeg));
+        vect1.x = (vect1_temp.x * cos(zdeg)- vect1_temp.y * sin(zdeg));
+        vect1.y = (vect1_temp.x * sin(zdeg) + vect1_temp.y * cos(zdeg));
+
+
+
+        vertical = (sqrt(vect1.x*vect1.x+vect1.y*vect1.y));
+        DistanceParam = DistanceHelper * vertical;
+
+        return DistanceParam;
+    }
+
+
 
     }
 
