@@ -55,7 +55,7 @@ public class MathOpertions {
 
             vertical = (sqrt(vect1.x*vect1.x+vect1.y*vect1.y));
             horizontal = (sqrt(vect2.x*vect2.x+vect2.y*vect2.y));
-            DegreeParam = (acos(horizontal/vertical));
+            DegreeParam = (acos(horizontal/vertical))*180/PI;
 
             return DegreeParam;
         }
