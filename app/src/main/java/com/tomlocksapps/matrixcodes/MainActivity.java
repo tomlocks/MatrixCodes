@@ -59,14 +59,15 @@ public class MainActivity extends Activity {
                     if(finderPattern != null) {
 
                     Mat finderPatternMat = finderPattern.getMat();
-                        Log.d("FinderPattern: ", "leftTop: " + finderPattern.getLeftTop() + "; rightTop: " + finderPattern.getRightTop() + "; bottomLeft: " + finderPattern.getLeftBottom());
 
                         Bitmap bmp = Bitmap.createBitmap(finderPatternMat.cols(), finderPatternMat.rows(), Bitmap.Config.ARGB_8888);
                         Utils.matToBitmap(finderPatternMat, bmp);
 
-                        Toast.makeText(getApplicationContext(), "leftTop: " + finderPattern.getLeftTop() + "; rightTop: " + finderPattern.getRightTop() + "; bottomLeft: " + finderPattern.getLeftBottom(), Toast.LENGTH_LONG).show();
 
-                        imageViewPreview.setImageBitmap(bmp);
+                       imageViewPreview.setImageBitmap(bmp);
+
+          //              Log.d("FinderPattern: ", "angle: " + angle + " leftTop: " + finderPattern.getLeftTop() + "; rightTop: " + finderPattern.getRightTop() + "; bottomLeft: " + finderPattern.getLeftBottom());
+
                     } else {
                         Toast.makeText(getApplicationContext(), " Not Found " , Toast.LENGTH_LONG).show();
 
