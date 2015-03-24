@@ -151,9 +151,9 @@ public class QRCodeFinder {
 
 
             for(int i =0 ; mc.size() > i ; i++) {
-                if(mc.get(i).x > rightTopIndex)
+                if(mc.get(i).x > mc.get(rightTopIndex).x)
                     rightTopIndex = i;
-                if(mc.get(i).y > leftBottomIndex)
+                if(mc.get(i).y > mc.get(leftBottomIndex).y)
                     leftBottomIndex = i;
             }
 
