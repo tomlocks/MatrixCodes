@@ -24,7 +24,7 @@ public class MathOpertions {
         this.leftTop = leftTop;
         this.rightTop = rightTop;
         this.yDeg = yDeg;
-        this.zDeg = zDeg;
+        this.zDeg = zDeg - 90;
     }
 
 
@@ -35,7 +35,7 @@ public class MathOpertions {
          */
         public double DegreeMath()
         {
-            zdeg=zdeg-90;
+
             Point vect1 = new Point();
             Point vect2 = new Point();
             Point vect1_temp = new Point();
@@ -86,7 +86,6 @@ public class MathOpertions {
 
     public double DistanceMath()
     {
-        zdeg=zdeg-90;
         Point vect1 = new Point();
         Point vect1_temp = new Point();
         double vertical;
