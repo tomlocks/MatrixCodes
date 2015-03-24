@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.tomlocksapps.matrixcodes.model.FinderPattern;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
@@ -37,7 +40,7 @@ public class MainActivity extends Activity {
 
                 Camera.Size size = camera.getParameters().getPictureSize();
 
-                long start = System.currentTimeMillis();
+
 
                 if(format == ImageFormat.JPEG) {
                     Mat m = new Mat( 1 , data.length , CvType.CV_8UC1);
@@ -46,14 +49,28 @@ public class MainActivity extends Activity {
                     Mat bgrMat = new Mat();
                     bgrMat = Highgui.imdecode(m, Highgui.IMREAD_GRAYSCALE);
                     Log.d("bgrMat", "rows: " + bgrMat.rows() + " ;cols: " + bgrMat.cols() + "; type: " + bgrMat.type());
-                    Bitmap bmp = Bitmap.createBitmap(bgrMat.cols(), bgrMat.rows(), Bitmap.Config.ARGB_8888);
-                    Utils.matToBitmap(bgrMat, bmp);
+
+                    long start = System.currentTimeMillis();
+
+                    FinderPattern finderPattern = QRCodeFinder.findFinderPattern(bgrMat);
+
                     Log.d("start: ",   System.currentTimeMillis()- start + "");
 
+                    if(finderPattern != null) {
 
+                    Mat finderPatternMat = finderPattern.getMat();
+                        Log.d("FinderPattern: ", "leftTop: " + finderPattern.getLeftTop() + "; rightTop: " + finderPattern.getRightTop() + "; bottomLeft: " + finderPattern.getLeftBottom());
 
-                    imageViewPreview.setImageBitmap(bmp);
+                        Bitmap bmp = Bitmap.createBitmap(finderPatternMat.cols(), finderPatternMat.rows(), Bitmap.Config.ARGB_8888);
+                        Utils.matToBitmap(finderPatternMat, bmp);
 
+                        Toast.makeText(getApplicationContext(), "leftTop: " + finderPattern.getLeftTop() + "; rightTop: " + finderPattern.getRightTop() + "; bottomLeft: " + finderPattern.getLeftBottom(), Toast.LENGTH_LONG).show();
+
+                        imageViewPreview.setImageBitmap(bmp);
+                    } else {
+                        Toast.makeText(getApplicationContext(), " Not Found " , Toast.LENGTH_LONG).show();
+
+                    }
 
                 }
 
