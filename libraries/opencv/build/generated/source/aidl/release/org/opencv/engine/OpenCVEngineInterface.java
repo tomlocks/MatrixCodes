@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: C:\\Android\\workspace_android_studio\\MatrixCodes\\libraries\\opencv\\src\\org\\opencv\\engine\\OpenCVEngineInterface.aidl
+ * Original file: C:\\Users\\Sebastian\\Documents\\GitHub\\MatrixCodes\\libraries\\opencv\\src\\org\\opencv\\engine\\OpenCVEngineInterface.aidl
  */
 package org.opencv.engine;
 /**
