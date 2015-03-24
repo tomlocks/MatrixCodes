@@ -63,11 +63,11 @@ public class MainActivity extends Activity {
                         Bitmap bmp = Bitmap.createBitmap(finderPatternMat.cols(), finderPatternMat.rows(), Bitmap.Config.ARGB_8888);
                         Utils.matToBitmap(finderPatternMat, bmp);
 
-                        MathOpertions mathOpertions = new MathOpertions();
+                        MathOpertions mathOpertions = new MathOpertions(finderPattern.getLeftBottom(), finderPattern.getLeftTop(), finderPattern.getRightTop() ,  0 ,0 );
 
-                        double angle = mathOpertions.DegreeMath(finderPattern.getLeftBottom(), finderPattern.getLeftTop(), finderPattern.getRightTop(), 0 ,0 );
+                        double angle = mathOpertions.DegreeMath();
 
-                        double distanceParam = MathOpertions.DistanceMath(finderPattern.getLeftBottom(), finderPattern.getLeftTop(),0 ,0 );
+                        double distanceParam = mathOpertions.DistanceMath();
 //                        Toast.makeText(getApplicationContext(), "leftTop: " + finderPattern.getLeftTop() + "; rightTop: " + finderPattern.getRightTop() + "; bottomLeft: " + finderPattern.getLeftBottom(), Toast.LENGTH_LONG).show();
 
                         Log.d("FinderPattern: ", "angle: " + angle + " direction: " + mathOpertions.getDirection() + "distance " + distanceParam  );
