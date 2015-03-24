@@ -167,7 +167,7 @@ public class QRCodeFinder {
         }
 
        // Log.d("contoursFinderPattern", "size: " + contoursFinderPattern.size());
-        // tescik
+        // tescik 2
 
 
         return finderPattern;
