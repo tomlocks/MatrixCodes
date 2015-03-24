@@ -141,6 +141,7 @@ public class MainActivity extends Activity {
         super.onPause();
 
         cameraHelper.onPause();
+        
     }
 
 
