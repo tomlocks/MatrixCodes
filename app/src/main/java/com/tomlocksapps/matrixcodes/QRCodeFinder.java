@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.lang.Math.*;
 
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
@@ -38,6 +39,29 @@ public class QRCodeFinder {
 //
 //        return qr;
 //    }
+    double PointRotated(Point LeftBottom, Point LeftTop, Point RightTop, double RotationDeg)
+    {
+        Point LeftBottom_temp = new Point();
+        Point LeftTop_temp = new Point();
+        Point RightTop_temp = new Point();
+
+        LeftBottom_temp.x = LeftBottom.x*Math.cos(RotationDeg) - LeftBottom.y*Math.sin(RotationDeg);
+        LeftBottom_temp.y = LeftBottom.x*Math.sin(RotationDeg) + LeftBottom.y*Math.cos(RotationDeg);
+
+        LeftTop_temp.x = LeftTop.x * Math.cos(RotationDeg) - LeftTop.y * Math.sin(RotationDeg);
+        LeftTop_temp.y = LeftTop.x * Math.sin(RotationDeg) + LeftTop.y * Math.cos(RotationDeg);
+
+        RightTop_temp.x = RightTop.x * Math.cos(RotationDeg) - RightTop.y * Math.sin(RotationDeg);
+        RightTop_temp.y = RightTop.x * Math.sin(RotationDeg) + RightTop.y * Math.cos(RotationDeg);
+
+
+
+
+        return 0;
+    }
+
+
+
 
     public static FinderPattern findFinderPattern(Mat image) {
 
