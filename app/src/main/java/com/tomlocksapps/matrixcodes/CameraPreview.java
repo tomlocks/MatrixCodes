@@ -24,9 +24,9 @@ public class CameraPreview extends SurfaceView implements
 
     private Camera.Size previewSize;
     private Integer previewFormat;
+    private  Camera.PreviewCallback previewCallback;
 
-
-    public CameraPreview(Context context, Camera camera) {
+    public CameraPreview(Context context, Camera camera, final Camera.PreviewCallback previewCallback) {
         super(context);
         this.camera = camera;
 
@@ -34,6 +34,7 @@ public class CameraPreview extends SurfaceView implements
 
         this.previewSize = params.getPreviewSize();
         this.previewFormat = params.getPreviewFormat();
+        this.previewCallback = previewCallback;
 
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.
@@ -67,7 +68,7 @@ public class CameraPreview extends SurfaceView implements
         // The Surface has been created, now tell the camera where to draw the
         // preview.
         try {
-            //	camera.setPreviewCallback(previewCallback);
+            camera.setPreviewCallback(previewCallback);
 
             camera.setPreviewDisplay(holder);
             camera.startPreview();
@@ -99,13 +100,13 @@ public class CameraPreview extends SurfaceView implements
 
         // set preview size and make any resize, rotate or
         // reformatting changes here
-        camera.setDisplayOrientation(90);
+          camera.setDisplayOrientation(90);
 
         // start preview with new settings
         try {
 
 
-            //    camera.setPreviewCallback(previewCallback);
+            camera.setPreviewCallback(previewCallback);
             camera.setPreviewDisplay(mHolder);
             Camera.Parameters parameters = camera.getParameters();
             parameters.setPreviewSize(previewSize.width, previewSize.height);

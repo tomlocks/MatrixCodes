@@ -141,7 +141,12 @@ public class QRCodeFinder {
             Imgproc.drawContours(contoursDrawing, contoursFinderPattern, i, Scalar.all(100));
         }
 
+
+
         FinderPattern finderPattern = null;
+
+        //     FinderPattern finderPattern =  new FinderPattern(new Point(0,0),new Point(0,0),new Point(0,0));
+   //     finderPattern.setMat(contoursDrawing);
 
         if(contoursFinderPattern.size() == 3) {
 

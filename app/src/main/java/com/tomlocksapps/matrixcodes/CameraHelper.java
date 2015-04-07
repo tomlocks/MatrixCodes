@@ -2,9 +2,19 @@ package com.tomlocksapps.matrixcodes;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.hardware.Camera;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import com.tomlocksapps.matrixcodes.model.FinderPattern;
+import com.tomlocksapps.matrixcodes.utils.ImageUtils;
+
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.highgui.Highgui;
+import org.opencv.imgproc.Imgproc;
 
 /**
  * Created by Tomasz on 2014-10-12.
@@ -21,16 +31,21 @@ public class CameraHelper {
 
     private Camera.Parameters cameraParameters;
 
+    private Camera.PreviewCallback previewCallback;
 
-    CameraHelper(Context context, FrameLayout preview, final Camera.PictureCallback pictureCallback) {
+    CameraHelper(Context context, FrameLayout preview, final Camera.PictureCallback pictureCallback, final Camera.PreviewCallback previewCallback) {
         this.context = context;
         this.preview = preview;
         this.pictureCallback = pictureCallback;
-
+        this.previewCallback = previewCallback;
 
         this.camera = getCameraInstance(); // available in onResume method
 
         this.cameraParameters = camera.getParameters(); // available in onResume method
+
+        this.cameraParameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+
+        camera.setParameters(cameraParameters);
 
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +105,7 @@ public class CameraHelper {
         camera.setParameters(cameraParameters);
 
         // Create our Preview view and set it as the content of our activity.
-        cameraPreview = new CameraPreview(context, camera);
+        cameraPreview = new CameraPreview(context, camera, previewCallback);
 
         preview.addView(cameraPreview);
     }
@@ -98,7 +113,10 @@ public class CameraHelper {
 
     protected void onPause() {
 
+
         if (camera != null) {
+            camera.setPreviewCallback(null);
+            cameraPreview.getHolder().removeCallback(cameraPreview);
             camera.stopPreview();
             camera.release();
             preview.removeView(cameraPreview);
@@ -113,6 +131,13 @@ public class CameraHelper {
     public void setPictureSize(Camera.Size pictureSize) {
 
         cameraParameters.setPictureSize(pictureSize.width, pictureSize.height);
+
+        camera.setParameters(cameraParameters);
+    }
+
+    public void setPreviewSize(Camera.Size previewSize) {
+
+        cameraParameters.setPreviewSize(previewSize.width, previewSize.height);
 
         camera.setParameters(cameraParameters);
     }
