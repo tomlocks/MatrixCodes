@@ -2,6 +2,9 @@ package com.tomlocksapps.matrixcodes.utils;
 
 import android.hardware.Camera;
 
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+
 /**
  * Created by Tomasz on 2015-03-25.
  */
@@ -41,5 +44,28 @@ public class ImageUtils {
         return a;
     }
 
+    public static Point pointMultiplyBy(Point p , double valuePercentX, double valuePercentY) {
+        return new Point(p.x * valuePercentX, p.y * valuePercentY);
+    }
+
+    public static double calculateDistance(Point p1, Point p2) {
+        return Math.sqrt(Math.pow((p1.x - p2.x),2) + Math.pow((p1.y - p2.y),2));
+    }
+
+    public static int getMaximumLengthBetweenContourAndPointIndex(MatOfPoint contour, Point p, boolean xAxis, boolean yAxis) {
+
+        Point[] cnt = contour.toArray();
+        double maxLength = 0;
+        int maxLengthIndex = -1;
+        for(int i=0; cnt.length > i ; i++) {
+            double length = ImageUtils.calculateDistance(p, cnt[i]);
+            if(length > maxLength && (xAxis ? p.x < cnt[i].x :  p.x > cnt[i].x) && (yAxis ? p.y < cnt[i].y :  p.y > cnt[i].y)) {
+                maxLengthIndex = i;
+                maxLength = length;
+            }
+        }
+
+        return maxLengthIndex;
+    }
 
 }

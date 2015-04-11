@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.tomlocksapps.matrixcodes.model.FinderPattern;
+import com.tomlocksapps.matrixcodes.model.QRCode;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
@@ -88,8 +89,6 @@ public class MainActivity extends Activity {
 
                     Mat finderPatternMat = finderPattern.getMat();
 
-                    Bitmap bmp = Bitmap.createBitmap(finderPatternMat.cols(), finderPatternMat.rows(), Bitmap.Config.ARGB_8888);
-                    Utils.matToBitmap(finderPatternMat, bmp);
 
                     MathOpertions mathOpertions = new MathOpertions(finderPattern.getLeftBottom(), finderPattern.getLeftTop(), finderPattern.getRightTop(), 0, 0);
 
@@ -103,7 +102,22 @@ public class MainActivity extends Activity {
                     Log.d("Calculation Time", "time : " + (System.currentTimeMillis() - start));
 
 
+                    QRCode qrCode = new QRCode(finderPattern, mRgba);
+
+                    Bitmap bmp = Bitmap.createBitmap(finderPatternMat.cols(), finderPatternMat.rows(), Bitmap.Config.ARGB_8888);
+                    Utils.matToBitmap(finderPatternMat, bmp);
+
                     imageViewPreview.setImageBitmap(bmp);
+
+//                    Mat qrMat = qrCode.getQrCodeMat();
+//
+//                    Bitmap bmp = Bitmap.createBitmap(qrMat.cols(), qrMat.rows(), Bitmap.Config.ARGB_8888);
+//                    Utils.matToBitmap(qrMat, bmp);
+//
+//                    imageViewPreview.setImageBitmap(bmp);
+
+
+
 
 //                    if(camera.getParameters().getMaxNumFocusAreas() > 0  && !focusSuccess && false) {
 //                        List<Camera.Area>  focusAreas = new ArrayList<Camera.Area>(1);

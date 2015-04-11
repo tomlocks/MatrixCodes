@@ -13,7 +13,46 @@ public class FinderPattern {
     private Point rightTop;
     private Point leftBottom;
 
+    private Point leftTopBorder;
+
+    public Point getLeftTopBorder() {
+        return leftTopBorder;
+    }
+
+    public void setLeftTopBorder(Point leftTopBorder) {
+        this.leftTopBorder = leftTopBorder;
+    }
+
+    public Point getRightTopBorder() {
+        return rightTopBorder;
+    }
+
+    public void setRightTopBorder(Point rightTopBorder) {
+        this.rightTopBorder = rightTopBorder;
+    }
+
+    public Point getLeftBottomBorder() {
+        return leftBottomBorder;
+    }
+
+    public void setLeftBottomBorder(Point leftBottomBorder) {
+        this.leftBottomBorder = leftBottomBorder;
+    }
+
+    private Point rightTopBorder;
+    private Point leftBottomBorder;
+
     private Mat mat;
+
+
+    public FinderPattern(Point leftTop, Point rightTop, Point leftBottom, Point leftTopBorder, Point rightTopBorder, Point leftBottomBorder) {
+        this.leftTop = leftTop;
+        this.rightTop = rightTop;
+        this.leftBottom = leftBottom;
+        this.leftTopBorder = leftTopBorder;
+        this.rightTopBorder = rightTopBorder;
+        this.leftBottomBorder = leftBottomBorder;
+    }
 
 
     public FinderPattern(Point leftTop, Point rightTop, Point leftBottom) {
