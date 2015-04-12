@@ -41,7 +41,7 @@ public class QRCodeFinder {
 //    }
     FinderPattern PointRotated(Point point1, Point point2, Point point3, double RotationDeg)
     {
-        FinderPattern rotatedPoints = null;
+
         Point point1_temp = new Point();
         Point point2_temp = new Point();
         Point point3_temp = new Point();
@@ -55,7 +55,7 @@ public class QRCodeFinder {
         point3_temp.x = point3.x * Math.cos(RotationDeg) - point3.y * Math.sin(RotationDeg);
         point3_temp.y = point3.x * Math.sin(RotationDeg) + point3.y * Math.cos(RotationDeg);
 
-        rotatedPoints = new FinderPattern(point1_temp,point2_temp,point3_temp);
+        FinderPattern rotatedPoints = new FinderPattern(point1_temp,point2_temp,point3_temp);
 
 
         return rotatedPoints;
