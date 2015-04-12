@@ -39,25 +39,26 @@ public class QRCodeFinder {
 //
 //        return qr;
 //    }
-    double PointRotated(Point LeftBottom, Point LeftTop, Point RightTop, double RotationDeg)
+    FinderPattern PointRotated(Point point1, Point point2, Point point3, double RotationDeg)
     {
-        Point LeftBottom_temp = new Point();
-        Point LeftTop_temp = new Point();
-        Point RightTop_temp = new Point();
+        FinderPattern rotatedPoints = null;
+        Point point1_temp = new Point();
+        Point point2_temp = new Point();
+        Point point3_temp = new Point();
 
-        LeftBottom_temp.x = LeftBottom.x*Math.cos(RotationDeg) - LeftBottom.y*Math.sin(RotationDeg);
-        LeftBottom_temp.y = LeftBottom.x*Math.sin(RotationDeg) + LeftBottom.y*Math.cos(RotationDeg);
+        point1_temp.x = point1.x*Math.cos(RotationDeg) - point1.y*Math.sin(RotationDeg);
+        point1_temp.y = point1.x*Math.sin(RotationDeg) + point1.y*Math.cos(RotationDeg);
 
-        LeftTop_temp.x = LeftTop.x * Math.cos(RotationDeg) - LeftTop.y * Math.sin(RotationDeg);
-        LeftTop_temp.y = LeftTop.x * Math.sin(RotationDeg) + LeftTop.y * Math.cos(RotationDeg);
+        point2_temp.x = point2.x * Math.cos(RotationDeg) - point2.y * Math.sin(RotationDeg);
+        point2_temp.y = point2.x * Math.sin(RotationDeg) + point2.y * Math.cos(RotationDeg);
 
-        RightTop_temp.x = RightTop.x * Math.cos(RotationDeg) - RightTop.y * Math.sin(RotationDeg);
-        RightTop_temp.y = RightTop.x * Math.sin(RotationDeg) + RightTop.y * Math.cos(RotationDeg);
+        point3_temp.x = point3.x * Math.cos(RotationDeg) - point3.y * Math.sin(RotationDeg);
+        point3_temp.y = point3.x * Math.sin(RotationDeg) + point3.y * Math.cos(RotationDeg);
+
+        rotatedPoints = new FinderPattern(point1_temp,point2_temp,point3_temp);
 
 
-
-
-        return 0;
+        return rotatedPoints;
     }
 
 
