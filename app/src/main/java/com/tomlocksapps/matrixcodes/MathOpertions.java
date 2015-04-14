@@ -113,7 +113,16 @@ public class MathOpertions {
         return direction;
     }
 
+    public Point fourthPoint(Point P1, Point P2, Point P3, Point P4)
+    {
+        Point fourthPoint = null;
+        double L, M;
 
+        L=P1.y*(P4.x-P3.x)*(P2.x-P1.x)-P3.y*(P4.x-P3.x)*(P2.x-P1.x)+P2.x*P3.x*P4.y-P2.x*P3.x*P3.y-P1.x*P3.x*P4.y+P1.x*P3.x*P4.x+P1.x*P3.x*P4.y+P1.x*P3.x*P4.y-P1.x*P4.x*P2.y+P1.x*P4.x*P1.y+P1.x*P3.x*P2.y-P1.x*P3.x*P1.y;
+        M=P2.x*P4.y-P2.x*P3.y-P1.x*P4.y+P1.x*P3.y-P4.x*P2.y+P4.x*P1.y+P3.x*P2.y-P3.x*P1.y;
+        fourthPoint.x=L/M;
+        fourthPoint.y=(((P2.y-P1.y)*(fourthPoint.x-P1.x))/(P2.x-P1.x))+P1.y;
+
+        return fourthPoint;
+    }
 }
-
-
