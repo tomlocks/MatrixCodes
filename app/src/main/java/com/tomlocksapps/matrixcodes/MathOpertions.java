@@ -123,7 +123,7 @@ public class MathOpertions {
                 +P2.x*P3.x*P4.y
                 -P2.x*P3.x*P3.y
                 -P1.x*P3.x*P4.y
-                +P1.x*P3.x*P3.x
+                +P1.x*P3.x*P3.y
                 -P1.x*P4.x*P2.y
                 +P1.x*P4.x*P1.y
                 +P1.x*P3.x*P2.y
