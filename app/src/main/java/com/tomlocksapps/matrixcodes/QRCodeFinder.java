@@ -12,6 +12,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.RotatedRect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
@@ -155,7 +156,10 @@ public class QRCodeFinder {
 
             for (MatOfPoint contourFinderPattern : contoursFinderPattern) {
                 minAreaRects.add(Imgproc.minAreaRect(new MatOfPoint2f(contourFinderPattern.toArray())));
+
+
             }
+
 
             for (RotatedRect areaRect : minAreaRects) {
                 double blob_angle_deg = areaRect.angle;
@@ -165,6 +169,17 @@ public class QRCodeFinder {
 
                 Log.d("areaRect", "areaRect angle: " + blob_angle_deg + " center: " + areaRect.center);
             }
+
+//            for(RotatedRect r :minAreaRects ) {
+//                Point[] pt = new Point[4];
+//                r.points(pt);
+//
+//                for(int i=0; pt.length > i ; i++) {
+//                    pt[i] = ImageUtils.rotatePoint(pt[i], r.angle);
+//                    Core.circle(contoursDrawing, pt[i], 20, new Scalar(100, 100, 100), 2);
+//                }
+//            }
+
 
             Log.d("areaRect", "areaRect angle: ----------- ");
 
@@ -178,6 +193,8 @@ public class QRCodeFinder {
                     maxIndex = i;
                 }
             }
+
+
 
             Core.line(contoursDrawing, mc.get(maxIndex), mc.get((maxIndex + 1) % 3), new Scalar(100, 100, 100), 20);
 
@@ -193,16 +210,22 @@ public class QRCodeFinder {
                     leftTopIndex = i;
             }
 
-            int rightTopBorderIndex = ImageUtils.getMaximumLengthBetweenContourAndPointIndex(contoursFinderPattern.get(rightTopIndex), mc.get(rightTopIndex), true, false);
-            int leftTopBorderIndex = ImageUtils.getMaximumLengthBetweenContourAndPointIndex(contoursFinderPattern.get(leftTopIndex), mc.get(leftTopIndex), false, false);
-            int leftBottomBorderIndex = ImageUtils.getMaximumLengthBetweenContourAndPointIndex(contoursFinderPattern.get(leftBottomIndex), mc.get(leftBottomIndex), false, true);
+//            int rightTopBorderIndex = ImageUtils.getMaximumLengthBetweenContourAndPointIndex(minAreaRects.get(rightTopIndex), mc.get(rightTopIndex), true, false);
+//            int leftTopBorderIndex = ImageUtils.getMaximumLengthBetweenContourAndPointIndex(minAreaRects.get(leftTopIndex), mc.get(leftTopIndex), false, false);
+//            int leftBottomBorderIndex = ImageUtils.getMaximumLengthBetweenContourAndPointIndex(minAreaRects.get(leftBottomIndex), mc.get(leftBottomIndex), false, true);
 
-            Core.circle(contoursDrawing, contoursFinderPattern.get(rightTopIndex).toArray()[rightTopBorderIndex], 20, new Scalar(100, 100, 100));
-            Core.circle(contoursDrawing, contoursFinderPattern.get(leftTopIndex).toArray()[leftTopBorderIndex], 20, new Scalar(100, 100, 100));
-            Core.circle(contoursDrawing, contoursFinderPattern.get(leftBottomIndex).toArray()[leftBottomBorderIndex], 20, new Scalar(100, 100, 100));
+//            int rightTopBorderIndex = ImageUtils.getMaximumLengthBetweenContourAndPointIndex(contoursFinderPattern.get(rightTopIndex), mc.get(rightTopIndex), true, false);
+//            int leftTopBorderIndex = ImageUtils.getMaximumLengthBetweenContourAndPointIndex(contoursFinderPattern.get(leftTopIndex), mc.get(leftTopIndex), false, false);
+//            int leftBottomBorderIndex = ImageUtils.getMaximumLengthBetweenContourAndPointIndex(contoursFinderPattern.get(leftBottomIndex), mc.get(leftBottomIndex), false, true);
+
+//            Core.circle(contoursDrawing, contoursFinderPattern.get(rightTopIndex).toArray()[rightTopBorderIndex], 20, new Scalar(100, 100, 100), 2);
+//            Core.circle(contoursDrawing, contoursFinderPattern.get(leftTopIndex).toArray()[leftTopBorderIndex], 20, new Scalar(100, 100, 100), 2);
+//            Core.circle(contoursDrawing, contoursFinderPattern.get(leftBottomIndex).toArray()[leftBottomBorderIndex], 20, new Scalar(100, 100, 100), 2);
 
 
-            finderPattern = new FinderPattern(mc.get(leftTopIndex), mc.get(rightTopIndex), mc.get(leftBottomIndex), contoursFinderPattern.get(leftTopIndex).toArray()[leftTopBorderIndex], contoursFinderPattern.get(rightTopIndex).toArray()[rightTopBorderIndex], contoursFinderPattern.get(leftBottomIndex).toArray()[leftBottomBorderIndex]);
+//            finderPattern = new FinderPattern(mc.get(leftTopIndex), mc.get(rightTopIndex), mc.get(leftBottomIndex), contoursFinderPattern.get(leftTopIndex).toArray()[leftTopBorderIndex], contoursFinderPattern.get(rightTopIndex).toArray()[rightTopBorderIndex], contoursFinderPattern.get(leftBottomIndex).toArray()[leftBottomBorderIndex]);
+            finderPattern = new FinderPattern(mc.get(leftTopIndex), mc.get(rightTopIndex), mc.get(leftBottomIndex));
+
             finderPattern.setMat(contoursDrawing);
         }
 

@@ -4,6 +4,7 @@ import android.hardware.Camera;
 
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
+import org.opencv.core.RotatedRect;
 
 /**
  * Created by Tomasz on 2015-03-25.
@@ -68,4 +69,31 @@ public class ImageUtils {
         return maxLengthIndex;
     }
 
-}
+    public static int getMaximumLengthBetweenContourAndPointIndex(RotatedRect contour, Point p, boolean xAxis, boolean yAxis) {
+
+        Point[] cnt = new Point[4];
+        contour.points(cnt);
+        double maxLength = 0;
+        int maxLengthIndex = -1;
+        for(int i=0; cnt.length > i ; i++) {
+            double length = ImageUtils.calculateDistance(p, cnt[i]);
+            if(length > maxLength && (xAxis ? p.x < cnt[i].x :  p.x > cnt[i].x) && (yAxis ? p.y < cnt[i].y :  p.y > cnt[i].y)) {
+                maxLengthIndex = i;
+                maxLength = length;
+            }
+        }
+
+        return maxLengthIndex;
+    }
+
+    public static Point rotatePoint(Point point1, double RotationDeg) {
+        Point point1_temp = new Point();
+
+        point1_temp.x = point1.x*Math.cos(RotationDeg) - point1.y*Math.sin(RotationDeg);
+        point1_temp.y = point1.x*Math.sin(RotationDeg) + point1.y*Math.cos(RotationDeg);
+
+        return point1_temp;
+    }
+
+
+    }

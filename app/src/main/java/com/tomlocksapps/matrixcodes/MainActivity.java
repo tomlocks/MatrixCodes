@@ -102,12 +102,15 @@ public class MainActivity extends Activity {
                     Log.d("Calculation Time", "time : " + (System.currentTimeMillis() - start));
 
 
-                    QRCode qrCode = new QRCode(finderPattern, mRgba);
 
                     Bitmap bmp = Bitmap.createBitmap(finderPatternMat.cols(), finderPatternMat.rows(), Bitmap.Config.ARGB_8888);
                     Utils.matToBitmap(finderPatternMat, bmp);
 
                     imageViewPreview.setImageBitmap(bmp);
+          //          imageViewPreview.setRotation(90);
+
+//                    QRCode qrCode = new QRCode(finderPattern, mRgba);
+
 
 //                    Mat qrMat = qrCode.getQrCodeMat();
 //
