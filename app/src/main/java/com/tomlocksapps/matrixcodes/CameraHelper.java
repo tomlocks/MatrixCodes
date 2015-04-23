@@ -2,19 +2,9 @@ package com.tomlocksapps.matrixcodes;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.hardware.Camera;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
-
-import com.tomlocksapps.matrixcodes.model.FinderPattern;
-import com.tomlocksapps.matrixcodes.utils.ImageUtils;
-
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.highgui.Highgui;
-import org.opencv.imgproc.Imgproc;
 
 /**
  * Created by Tomasz on 2014-10-12.
@@ -43,9 +33,9 @@ public class CameraHelper {
 
         this.cameraParameters = camera.getParameters(); // available in onResume method
 
-        this.cameraParameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
-
-        camera.setParameters(cameraParameters);
+//        this.cameraParameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+//
+//        camera.setParameters(cameraParameters);
 
         preview.setOnClickListener(new View.OnClickListener() {
             @Override

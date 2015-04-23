@@ -1,98 +1,131 @@
 package com.tomlocksapps.matrixcodes.model;
 
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint2f;
+import com.tomlocksapps.matrixcodes.utils.ImageUtils;
+
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 
+import java.util.List;
+
 /**
- * Created by Tomasz on 2015-03-13.
+ * Created by Tomasz on 2015-04-21.
  */
 public class FinderPattern {
 
-    private Point leftTop;
-    private Point rightTop;
-    private Point leftBottom;
 
-    private Point leftTopBorder;
 
-    public Point getLeftTopBorder() {
-        return leftTopBorder;
+    private PointIndex topLeft;
+    private PointIndex topRight;
+    private PointIndex bottomLeft;
+    private PointIndex bottomRight;
+    private Point center;
+
+    private SquarePosition squarePosition;
+    private MatOfPoint contour;
+
+
+
+    public FinderPattern(MatOfPoint cnt, SquarePosition position, Point qrCodeCenter, Point squareCenter) {
+        squarePosition = position;
+        contour = cnt;
+
+        center = squareCenter;
+
+        PointIndex[] minMaxPoints = ImageUtils.getMinMaxLengthBetweenContourAndPoint(cnt, qrCodeCenter);
+
+        topLeft = minMaxPoints[1];
+        bottomRight = minMaxPoints[0];
+
     }
 
-    public void setLeftTopBorder(Point leftTopBorder) {
-        this.leftTopBorder = leftTopBorder;
+    public void findAdditionalPoints(Point otherSquareCenter) {
+        List<MatOfPoint> mt = null;
+
+        if(bottomRight.getIndex() < topLeft.getIndex())
+            mt = ImageUtils.findSubArrays(contour, bottomRight.getIndex(), topLeft.getIndex());
+        else
+            mt = ImageUtils.findSubArrays(contour, topLeft.getIndex(), bottomRight.getIndex());
+
+        PointIndex p1 =  ImageUtils.findFurthestPointBetweenPoints(mt.get(0), topLeft, bottomRight);
+        PointIndex p2 = ImageUtils.findFurthestPointBetweenPoints(mt.get(1), topLeft, bottomRight);
+
+        double p1dist = ImageUtils.calculateDistance(otherSquareCenter, p1);
+        double p2dist = ImageUtils.calculateDistance(otherSquareCenter, p2);
+
+        if(p1dist > p2dist) {
+            topRight = p2;
+            bottomLeft = p1;
+        } else {
+            topRight = p1;
+            bottomLeft = p2;
+        }
+
+        reArrangePoints();
+
     }
 
-    public Point getRightTopBorder() {
-        return rightTopBorder;
-    }
+    private void reArrangePoints() {
+        PointIndex temp;
+        switch (squarePosition) {
+            case TOP_LEFT:
+                // do nothing, correnct orientation
+                break;
+            case TOP_RIGHT:
+                temp = topLeft;
+                topLeft = topRight;
+                topRight = temp; // bottomRight; //
 
-    public void setRightTopBorder(Point rightTopBorder) {
-        this.rightTopBorder = rightTopBorder;
-    }
+                temp = bottomRight;
 
-    public Point getLeftBottomBorder() {
-        return leftBottomBorder;
-    }
+                bottomRight = bottomLeft;
+                bottomLeft =  temp; //
 
-    public void setLeftBottomBorder(Point leftBottomBorder) {
-        this.leftBottomBorder = leftBottomBorder;
-    }
+                break;
 
-    private Point rightTopBorder;
-    private Point leftBottomBorder;
+            case BOTTOM_LEFT:
 
-    private Mat mat;
+                temp = topLeft;
 
+                topLeft = topRight;
+                topRight = bottomRight;
+                bottomRight = bottomLeft;
+                bottomLeft = temp;
 
-    public FinderPattern(Point leftTop, Point rightTop, Point leftBottom, Point leftTopBorder, Point rightTopBorder, Point leftBottomBorder) {
-        this.leftTop = leftTop;
-        this.rightTop = rightTop;
-        this.leftBottom = leftBottom;
-        this.leftTopBorder = leftTopBorder;
-        this.rightTopBorder = rightTopBorder;
-        this.leftBottomBorder = leftBottomBorder;
-    }
-
-
-    public FinderPattern(Point leftTop, Point rightTop, Point leftBottom) {
-        this.leftTop = leftTop;
-        this.rightTop = rightTop;
-        this.leftBottom = leftBottom;
-    }
-
-    public Point getLeftTop() {
-        return leftTop;
-    }
-
-    public void setLeftTop(Point leftTop) {
-        this.leftTop = leftTop;
-    }
-
-    public Point getRightTop() {
-        return rightTop;
-    }
-
-    public void setRightTop(Point rightTop) {
-        this.rightTop = rightTop;
-    }
-
-    public Point getLeftBottom() {
-        return leftBottom;
-    }
-
-    public void setLeftBottom(Point leftBottom) {
-        this.leftBottom = leftBottom;
+                break;
+        }
     }
 
 
-    public Mat getMat() {
-        return mat;
+    public enum SquarePosition {
+        TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT
     }
 
-    public void setMat(Mat mat) {
-        this.mat = mat;
+    public PointIndex getTopLeft() {
+        return topLeft;
     }
 
+    public PointIndex getTopRight() {
+        return topRight;
+    }
+
+    public PointIndex getBottomLeft() {
+        return bottomLeft;
+    }
+
+    public PointIndex getBottomRight() {
+        return bottomRight;
+    }
+
+    public Point getCenter() {
+        return center;
+    }
+
+    public SquarePosition getSquarePosition() {
+        return squarePosition;
+    }
+
+    public MatOfPoint getContour() {
+        return contour;
+    }
 
 }

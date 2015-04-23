@@ -3,7 +3,6 @@ package com.tomlocksapps.matrixcodes;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -14,7 +13,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.tomlocksapps.matrixcodes.model.FinderPattern;
+import com.tomlocksapps.matrixcodes.model.FinderPattern2;
 import com.tomlocksapps.matrixcodes.model.QRCode;
+import com.tomlocksapps.matrixcodes.utils.ImageUtils;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
@@ -23,6 +24,7 @@ import org.opencv.android.Utils;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
+
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 
@@ -36,7 +38,7 @@ public class MainActivity extends Activity {
     private FrameLayout preview;
     private CameraHelper cameraHelper;
     private ImageView imageViewPreview;
-    private boolean focusSuccess = false;
+    private boolean focusLock = false;
 
     private Camera.PictureCallback pictureCallback = new Camera.PictureCallback() {
         @Override
@@ -50,6 +52,8 @@ public class MainActivity extends Activity {
             }
 
             camera.startPreview();
+
+            focusLock = false;
         }
     };
 
@@ -81,91 +85,169 @@ public class MainActivity extends Activity {
 
                 Utils.matToBitmap(mRgba, map);
 
-                //      imageViewPreview.setImageBitmap(map);
+//                      imageViewPreview.setImageBitmap(map);
 
-                FinderPattern finderPattern = QRCodeFinder.findFinderPattern(mRgba);
-
-                if (finderPattern != null) {
-
-                    Mat finderPatternMat = finderPattern.getMat();
+                QRCode qrCode = QRCodeFinder.findFinderPattern(mRgba);
 
 
-                    MathOpertions mathOpertions = new MathOpertions(finderPattern.getLeftBottom(), finderPattern.getLeftTop(), finderPattern.getRightTop(), 0, 0);
+                if(qrCode!=null) {
 
-                    double angle = mathOpertions.DegreeMath();
 
-                    double distanceParam = mathOpertions.DistanceMath();
-//                        Toast.makeText(getApplicationContext(), "leftTop: " + finderPattern.getLeftTop() + "; rightTop: " + finderPattern.getRightTop() + "; bottomLeft: " + finderPattern.getLeftBottom(), Toast.LENGTH_LONG).show();
-
-                    Log.d("FinderPattern: ", "angle: " + angle + " direction: " + mathOpertions.getDirection() + "distance " + distanceParam);
-
-                    Log.d("Calculation Time", "time : " + (System.currentTimeMillis() - start));
+              //      qrCode.snipCode(mRgba);
 
 
 
-                    Bitmap bmp = Bitmap.createBitmap(finderPatternMat.cols(), finderPatternMat.rows(), Bitmap.Config.ARGB_8888);
-                    Utils.matToBitmap(finderPatternMat, bmp);
+                    if(camera.getParameters().getMaxNumFocusAreas() > 0  && !focusLock) {
+
+                        focusLock = true;
+
+                        List<Camera.Area> focusAreas = new ArrayList<Camera.Area>(1);
+                        int left = (int) (qrCode.getTopLeftFP().getTopLeft().x - size.width/2) * 2000/size.width;
+                        int top = (int) (qrCode.getTopLeftFP().getTopLeft().y - size.height/2) * 2000/size.height;
+
+                        Point bottomRight = qrCode.getFourthPoint();
+
+                        int right = (int) (bottomRight.x - size.width/2) * 2000/size.width;
+                        int bottom = (int) (bottomRight.y - size.height/2) * 2000/size.height;
+
+
+                        Rect rect = new Rect(left,top, right, bottom);
+                        Camera.Area area = new Camera.Area(rect,1000);
+                        focusAreas.add(area);
+
+                        Log.d("focus", "focus: " + rect.toString());
+
+                        camera.cancelAutoFocus();
+
+
+                        Camera.Parameters parameters = camera.getParameters();
+                        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+                        parameters.setFocusAreas(focusAreas);
+
+
+                        camera.setParameters(parameters);
+                        camera.autoFocus(new Camera.AutoFocusCallback() {
+                            @Override
+                            public void onAutoFocus(boolean success, Camera camera) {
+
+
+
+                                if (success)
+                                    camera.takePicture(null, null, pictureCallback);
+                                else
+                                    focusLock = false;
+//                                Camera.Parameters parameters = camera.getParameters();
+//                                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+//                                camera.setParameters(parameters);
+                            }
+                        });
+
+
+                    }
+
+
+
+
+
+
+
+
+                    Bitmap bmp = Bitmap.createBitmap(qrCode.getQrCodeMat().cols(), qrCode.getQrCodeMat().rows(), Bitmap.Config.ARGB_8888);
+                    Utils.matToBitmap(qrCode.getQrCodeMat(), bmp);
 
                     imageViewPreview.setImageBitmap(bmp);
-          //          imageViewPreview.setRotation(90);
+                }
 
-//                    QRCode qrCode = new QRCode(finderPattern, mRgba);
-
-
-//                    Mat qrMat = qrCode.getQrCodeMat();
-//
-//                    Bitmap bmp = Bitmap.createBitmap(qrMat.cols(), qrMat.rows(), Bitmap.Config.ARGB_8888);
-//                    Utils.matToBitmap(qrMat, bmp);
+//                    Bitmap bmp = Bitmap.createBitmap(mRgba.cols(), mRgba.rows(), Bitmap.Config.ARGB_8888);
+//                    Utils.matToBitmap(mRgba, bmp);
 //
 //                    imageViewPreview.setImageBitmap(bmp);
 
 
 
-
-//                    if(camera.getParameters().getMaxNumFocusAreas() > 0  && !focusSuccess && false) {
-//                        List<Camera.Area>  focusAreas = new ArrayList<Camera.Area>(1);
-//                        int left = (int) (finderPattern.getLeftTop().x - size.width/2) * 2000/size.width;
-//                        int top = (int) (finderPattern.getLeftTop().y - size.height/2) * 2000/size.height;
-//                        Point bottomRight = new Point(finderPattern.getRightTop().x, finderPattern.getLeftBottom().y );
-//                        int right = (int) (bottomRight.x - size.width/2) * 2000/size.width;
-//                        int bottom = (int) (bottomRight.y - size.height/2) * 2000/size.height;
-//                        Rect rect = new Rect(left,top, right, bottom);
-//                        Camera.Area area = new Camera.Area(rect,1000);
-//                        focusAreas.add(area);
+//                if (finderPattern != null) {
 //
-//                        Log.d("focus", "focus: " + rect.toString());
-//
-//                        camera.cancelAutoFocus();
+//                    Mat finderPatternMat = finderPattern2.getMat();
 //
 //
-//                        Camera.Parameters parameters = camera.getParameters();
-//                        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-//                        parameters.setFocusAreas(focusAreas);
+//                    MathOpertions mathOpertions = new MathOpertions(finderPattern2.getLeftBottom(), finderPattern2.getLeftTop(), finderPattern2.getRightTop(), 0, 0);
+//
+//                    double angle = mathOpertions.DegreeMath();
+//
+//                    double distanceParam = mathOpertions.DistanceMath();
+////                        Toast.makeText(getApplicationContext(), "leftTop: " + finderPattern.getLeftTop() + "; rightTop: " + finderPattern.getRightTop() + "; bottomLeft: " + finderPattern.getLeftBottom(), Toast.LENGTH_LONG).show();
+//
+//                    Log.d("FinderPattern: ", "angle: " + angle + " direction: " + mathOpertions.getDirection() + "distance " + distanceParam);
+//
+//                    Log.d("Calculation Time", "time : " + (System.currentTimeMillis() - start));
+//
+//                    Bitmap bmp = Bitmap.createBitmap(finderPatternMat.cols(), finderPatternMat.rows(), Bitmap.Config.ARGB_8888);
+//                    Utils.matToBitmap(finderPattern2.getMat(), bmp);
+//
+//                    imageViewPreview.setImageBitmap(bmp);
 //
 //
-//                        camera.setParameters(parameters);
-//                        camera.autoFocus(new Camera.AutoFocusCallback() {
-//                            @Override
-//                            public void onAutoFocus(boolean success, Camera camera) {
-//                                focusSuccess = success;
 //
-//                                if (success)
-//                                    camera.takePicture(null, null, pictureCallback);
+////                    Bitmap bmp = Bitmap.createBitmap(finderPatternMat.cols(), finderPatternMat.rows(), Bitmap.Config.ARGB_8888);
+////                    Utils.matToBitmap(finderPattern.contours, bmp);
+////
+////                    imageViewPreview.setImageBitmap(bmp);
 //
-//                                Camera.Parameters parameters = camera.getParameters();
-//                                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
-//                                camera.setParameters(parameters);
-//                            }
-//                        });
-//                    }
-
-
-
-
-                } else {
-                    //           Toast.makeText(getApplicationContext(), " Not Found " , Toast.LENGTH_LONG).show();
-
-                }
+//
+////                    QRCode qrCode = new QRCode(finderPattern, mRgba);
+////
+////
+////                    Mat qrMat = qrCode.getQrCodeMat();
+////
+////                    Bitmap bmp = Bitmap.createBitmap(qrMat.cols(), qrMat.rows(), Bitmap.Config.ARGB_8888);
+////                    Utils.matToBitmap(qrMat, bmp);
+////
+////                    imageViewPreview.setImageBitmap(bmp);
+//
+//
+//
+//
+////                    if(camera.getParameters().getMaxNumFocusAreas() > 0  && !focusSuccess && false) {
+////                        List<Camera.Area>  focusAreas = new ArrayList<Camera.Area>(1);
+////                        int left = (int) (finderPattern.getLeftTop().x - size.width/2) * 2000/size.width;
+////                        int top = (int) (finderPattern.getLeftTop().y - size.height/2) * 2000/size.height;
+////                        Point bottomRight = new Point(finderPattern.getRightTop().x, finderPattern.getLeftBottom().y );
+////                        int right = (int) (bottomRight.x - size.width/2) * 2000/size.width;
+////                        int bottom = (int) (bottomRight.y - size.height/2) * 2000/size.height;
+////                        Rect rect = new Rect(left,top, right, bottom);
+////                        Camera.Area area = new Camera.Area(rect,1000);
+////                        focusAreas.add(area);
+////
+////                        Log.d("focus", "focus: " + rect.toString());
+////
+////                        camera.cancelAutoFocus();
+////
+////
+////                        Camera.Parameters parameters = camera.getParameters();
+////                        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+////                        parameters.setFocusAreas(focusAreas);
+////
+////
+////                        camera.setParameters(parameters);
+////                        camera.autoFocus(new Camera.AutoFocusCallback() {
+////                            @Override
+////                            public void onAutoFocus(boolean success, Camera camera) {
+////                                focusSuccess = success;
+////
+////                                if (success)
+////                                    camera.takePicture(null, null, pictureCallback);
+////
+////                                Camera.Parameters parameters = camera.getParameters();
+////                                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+////                                camera.setParameters(parameters);
+////                            }
+////                        });
+////                    }
+//
+//
+//
+//
+//                }
 
 
 //            FinderPattern finderPattern = QRCodeFinder.findFinderPattern(bgrMat);
@@ -227,7 +309,7 @@ public class MainActivity extends Activity {
 
         // TODO - check the length of supported picture sizes!
        // cameraHelper.setPictureSize(cameraHelper.getParameters().getSupportedPictureSizes().get(8));
-        cameraHelper.setPreviewSize(cameraHelper.getParameters().getSupportedPreviewSizes().get(1));
+        cameraHelper.setPreviewSize(cameraHelper.getParameters().getSupportedPreviewSizes().get(cameraHelper.getParameters().getSupportedPreviewSizes().size()-5)); // 3
     }
 
 
