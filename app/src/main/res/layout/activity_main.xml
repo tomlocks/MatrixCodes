@@ -7,22 +7,44 @@
     <FrameLayout
         android:id="@+id/camera_preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
 
     </FrameLayout>
 
 
-    <ImageView
-        android:background="@android:color/black"
-        android:layout_width="640dp"
-        android:layout_height="320dp"
-        android:id="@+id/imageViewPreview"
-        android:layout_margin="20dp"
-        android:layout_alignParentRight="true"
+    <com.tomlocksapps.matrixcodes.view.DrawView
+        android:id="@+id/draw_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <TextView
+        android:text="angle"
+        android:id="@+id/textViewAngle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-       />
+        android:layout_alignParentLeft="true"
+        android:layout_margin="10dp" />
+
+    <TextView
+        android:text="position"
+        android:id="@+id/textViewPosition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/textViewAngle"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="10dp" />
+
+    <ImageView
+
+        android:id="@+id/imageViewPreview"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="10dp" />
 
 
 </RelativeLayout>

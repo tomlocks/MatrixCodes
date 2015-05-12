@@ -30,9 +30,17 @@ public class QRCode {
     }
 
 
+
+
     private FinderPattern topLeftFP;
     private FinderPattern topRightFP;
     private FinderPattern bottomLeftFP;
+
+    public Point getCenter() {
+        return center;
+    }
+
+    private Point center;
 
     private Mat qrCodeMat;
 
@@ -49,6 +57,8 @@ public class QRCode {
         this.bottomLeftFP = bottomLeftFP;
         this.topLeftFP = topLeftFP;
         this.topRightFP = topRightFP;
+
+        this.center = new Point((topLeftFP.getCenter().x + getTopRightFP().getCenter().x)/2 , (topLeftFP.getCenter().y + bottomLeftFP.getCenter().y)/2);
 
 //        int fX = (int) (finderPattern.getLeftBottom().x - finderPattern.getLeftTop().x);
 //        int fY = (int) (finderPattern.getLeftBottom().y - finderPattern.getLeftTop().y);
@@ -100,7 +110,7 @@ public class QRCode {
 //        }
     }
 
-    public void snipCode(Mat sourceImage) {
+    public boolean snipCode(Mat sourceImage) {
         this.qrCodeMat = new Mat(300,300, sourceImage.type());
 
         this.fourthPoint =  ImageUtils.calculateFourthPoint(topRightFP.getTopRight(), topRightFP.getBottomRight(),
@@ -113,15 +123,19 @@ public class QRCode {
         if(fourthPoint!=null) {
             MatOfPoint2f src = new MatOfPoint2f(topRightFP.getTopRight(), topLeftFP.getTopLeft() , bottomLeftFP.getBottomLeft(), fourthPoint);
 
-            int offset = 0;
+            int offset = sourceImage.width()/25;
 
-            MatOfPoint2f dest = new MatOfPoint2f(new Point(offset, qrCodeMat.cols() - offset), new Point(offset, offset), new Point(qrCodeMat.rows() - offset, offset), new Point(qrCodeMat.rows() - offset, qrCodeMat.cols() - offset));
+            MatOfPoint2f dest = new MatOfPoint2f(new Point(qrCodeMat.rows() - offset, offset), new Point(offset, offset), new Point(offset, qrCodeMat.cols() - offset) , new Point(qrCodeMat.rows() - offset, qrCodeMat.cols() - offset));
 
             Mat warpMat = Imgproc.getPerspectiveTransform(src, dest);
 
             Imgproc.warpPerspective(sourceImage, qrCodeMat, warpMat, qrCodeMat.size());
+//            Imgproc.cvtColor(qrCodeMat, qrCodeMat,Imgproc.COLOR_BGR2GRAY);
+//            Imgproc.threshold(qrCodeMat, qrCodeMat, 170, 255, Imgproc.THRESH_BINARY);
+            return true;
         }
 
+        return false;
     }
 
     public Mat getQrCodeMat() {

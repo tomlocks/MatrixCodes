@@ -392,5 +392,15 @@ public class ImageUtils {
     }
 
 
+    public static Point rotatePoint(Point p ,int degrees) {
+        //x' = xcos(alpha) - ysin(alpha)
+        //y' = xsin(alpha) + ycos(alpha)
+
+        int x = (int)(p.x*Math.cos(Math.toRadians(degrees)) - p.y*Math.sin(Math.toRadians(degrees)));
+        int y = (int)(p.x*Math.sin(Math.toRadians(degrees)) + p.y*Math.cos(Math.toRadians(degrees)));
+
+        return new Point(x,y);
+
+    }
 
     }

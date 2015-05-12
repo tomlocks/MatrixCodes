@@ -108,7 +108,6 @@ public class CameraPreview extends SurfaceView implements
         // start preview with new settings
         try {
 
-
             camera.setPreviewCallback(previewCallback);
             camera.setPreviewDisplay(mHolder);
             Camera.Parameters parameters = camera.getParameters();
