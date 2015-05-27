@@ -14,12 +14,19 @@ import com.google.zxing.MultiFormatReader;
 import com.google.zxing.RGBLuminanceSource;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
+import com.tomlocksapps.matrixcodes.model.CameraModel;
+import com.tomlocksapps.matrixcodes.model.GlobalPosition;
 import com.tomlocksapps.matrixcodes.model.QRCode;
+import com.tomlocksapps.matrixcodes.model.QRCodeContent;
+import com.tomlocksapps.matrixcodes.model.QRCodeContentParser;
 import com.tomlocksapps.matrixcodes.utils.ImageUtils;
 import com.tomlocksapps.matrixcodes.utils.Log;
 import com.tomlocksapps.matrixcodes.view.DrawView;
+import com.tomlocksapps.matrixcodes.view.UserPositionView;
 
+import android.os.Build;
 import android.view.View;
+import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -241,7 +248,7 @@ public class CameraHelper {
 
                 }
 
-                Toast.makeText(activity, "picture taken", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(activity, "picture taken", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -350,11 +357,11 @@ public class CameraHelper {
                     p1.x = size.height - qrCode.getTopLeftFP().getCenter().y;
                     p1.y = qrCode.getTopLeftFP().getCenter().x;
 
-                    drawView.setRatio(size);
-                //    drawView.setPoints(qrCode.getTopLeftFP()
-                // .getCenter(), qrCode.getTopRightFP().getCenter(), qrCode.getBottomLeftFP().getCenter());
-                    drawView.setPoints(p1,p1,p1);
-                    drawView.invalidate();
+//                    drawView.setRatio(size);
+//                //    drawView.setPoints(qrCode.getTopLeftFP()
+//                // .getCenter(), qrCode.getTopRightFP().getCenter(), qrCode.getBottomLeftFP().getCenter());
+//                    drawView.setPoints(p1,p1,p1);
+//                    drawView.invalidate();
 
                     android.util.Log.d("focus", "qrCode snipCode: " + result);
                     if (result) {
@@ -393,7 +400,58 @@ public class CameraHelper {
                         }
 
                         if(!finalResult.equals("")) {
-                            Toast.makeText(activity.getApplicationContext(), finalResult, Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(activity.getApplicationContext(), finalResult, Toast.LENGTH_SHORT).show();
+                            Log.d("UserPosition: "+qrCode.getUserPosition(), Log.LogType.OTHER, this);
+
+
+                           // qrCode.getTopLeftFP().getTopLeft().y - qrCode.getTopLeftFP().getBottomLeft().y
+
+                            double dist = ImageUtils.calculateDistance(qrCode.getTopLeftFP().getTopLeft(), qrCode.getTopLeftFP().getBottomLeft());
+
+                            Log.d("CameraModel: " + dist , Log.LogType.OTHER, this);
+
+                            List<Integer> dividers = new ArrayList<Integer>();
+                            dividers.add(2);
+                            dividers.add(5);
+                            dividers.add(8);
+                            dividers.add(11);
+                            dividers.add(12);
+
+
+
+                            if(qrCode.parseCode(finalResult, dividers)) {
+                                qrCode.computeUserPosition();
+                                QRCode.UserPosition userPosition = qrCode.getUserPosition();
+
+
+
+                                MathOpertions mathOpertions = new MathOpertions(qrCode.getBottomLeftFP().getCenter(), qrCode.getTopLeftFP().getCenter(), qrCode.getTopRightFP().getCenter(), qrCode.getQrCodeContent().getSize(), CameraModel.getFactor(Build.MODEL), userPosition);
+
+
+
+                                if(userPosition == QRCode.UserPosition.DOWN) {
+                                    Toast.makeText(activity, "Podnies telefon", Toast.LENGTH_SHORT).show();
+                                    //drawView.startAnimation(new TranslateAnimation());
+                                }   else if(userPosition == QRCode.UserPosition.UP) {
+                                    Toast.makeText(activity, "Obniz telefon", Toast.LENGTH_SHORT).show();
+                                    //drawView.startAnimation(new TranslateAnimation());
+                                }
+
+                                Log.d("UserPosition degree: " + mathOpertions.getCodeAngle() + " distance: " + mathOpertions.getDistanceToCode() + ", position:" + userPosition, Log.LogType.OTHER, this);
+                                Point global = GlobalPosition.getGlobalPosition(qrCode.getQrCodeContent().getP(),qrCode.getQrCodeContent().getAngle(),mathOpertions.getDistanceToCode(),mathOpertions.getCodeAngle());
+                                Log.d("UserPosition point: x: " + global.x + " y: " + global.y, Log.LogType.OTHER, this);
+
+
+                                UserPositionView userPositionView = (UserPositionView) activity.findViewById(R.id.userPositionView);
+                                userPositionView.setVisibility(View.VISIBLE);
+                                userPositionView.setRotation(qrCode.getQrCodeContent().getAngle());
+                                userPositionView.setUserPosition(mathOpertions.getDistanceToCode());
+                                userPositionView.setUserAngle(mathOpertions.getCodeAngle());
+                                userPositionView.setGlobalPosition(global);
+                                userPositionView.invalidate();
+
+                            }
+
                             //camera.cancelAutoFocus();
 
                             if(onImagePreviewListener!=null)

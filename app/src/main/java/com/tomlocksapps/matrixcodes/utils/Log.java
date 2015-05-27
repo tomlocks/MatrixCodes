@@ -19,7 +19,8 @@ public class Log {
     public enum LogType {
         LIFECYCLE("Lifecycle: "),
         OPENCV("OpenCV: "),
-        CAMERA("Camera: ")
+        CAMERA("Camera: "),
+        OTHER("Other: ")
         ;
 
         private final String text;

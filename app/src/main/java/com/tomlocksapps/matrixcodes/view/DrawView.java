@@ -16,6 +16,7 @@ import org.opencv.core.Point;
 public class DrawView extends View {
 
     private Paint p;
+    private Paint paintBlack;
     private Point topLeft, topRight, bottomLeft;
     private double xRatio = 1;
     private double yRatio = 1;
@@ -39,41 +40,37 @@ public class DrawView extends View {
     private void init() {
         p = new Paint(Paint.ANTI_ALIAS_FLAG);
         p.setColor(Color.RED);
-      //  p.setAlpha(67);
 
-
+        paintBlack = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paintBlack.setColor(Color.BLACK);
+        paintBlack.setAlpha(125);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-      //  canvas.drawRect(getWidth()/4, getHeight()/4, 3*getWidth()/4, 3*getHeight()/4, p);
 
-//        drawFinderPatternCenters(canvas);
-        if(topLeft != null)
-        canvas.drawCircle((float)(topLeft.x* xRatio) ,(float)topLeft.y, 15, p);
+//        canvas.translate(getWidth()/2, getHeight()/2);
+//        drawArrow(canvas);
+
+        canvas.drawRect(0,0, getWidth()/4, getHeight(), paintBlack );
+        canvas.drawRect(3*getWidth()/4,0, getWidth(), getHeight(), paintBlack );
+
+        canvas.drawRect(getWidth()/4, 0 , 3*getWidth()/4, getHeight()/4, paintBlack );
+
+        canvas.drawRect(getWidth()/4, 3*getHeight()/4 , 3*getWidth()/4, getHeight(), paintBlack );
+
+//        canvas.drawRect(0,0, getWidth()/4, getHeight(), paintBlack );
+//        canvas.drawRect(0,0, getWidth()/4, getHeight(), paintBlack );
+
+
+
     }
 
-//    private void drawFinderPatternCenters(Canvas canvas) {
-//        if(topLeft == null || topRight == null || bottomLeft == null)
-//            return;
-//
-//
-//        canvas.drawCircle((float)topLeft.x ,(float)topLeft.y, 15, p);
+//    protected void drawArrow(Canvas canvas) {
+//        canvas.drawRect(-getWidth()/12, -2*getHeight()/10,  getWidth()/10, 2*getHeight()/12,  p);
 //
 //    }
-
-    public void setRatio(Camera.Size cameraSize) {
-        this.xRatio = (double)cameraSize.height/getHeight();
-        this.yRatio = (double)cameraSize.width/getWidth();
-    }
-
-    public void setPoints(Point topLeft, Point topRight, Point bottomLeft) {
-
-        this.topLeft = topLeft;
-        this.topRight = topRight;
-        this.bottomLeft = bottomLeft;
-    }
 
 
 

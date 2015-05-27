@@ -1,0 +1,95 @@
+package com.tomlocksapps.matrixcodes;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.ArcShape;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.ImageView;
+
+import org.opencv.core.Point;
+
+import uk.co.senab.photoview.PhotoViewAttacher;
+
+import static com.tomlocksapps.matrixcodes.R.drawable.building_plan;
+
+
+public class MapActivity extends Activity {
+
+    private ImageView imageView;
+    private PhotoViewAttacher mAttacher;
+
+    public static final String BUNDLE_GLOBAL_X = "bundle_global_X";
+    public static final String BUNDLE_GLOBAL_Y = "bundle_global_Y";
+
+    private Paint paintRed;
+    private Point globalPosition;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_map);
+
+        Intent i = getIntent();
+
+        if(i!=null) {
+
+            globalPosition = new Point(i.getFloatExtra(BUNDLE_GLOBAL_X, -1), i.getFloatExtra(BUNDLE_GLOBAL_Y, -1));
+
+            paintRed = new Paint(Paint.ANTI_ALIAS_FLAG);
+            paintRed.setColor(Color.RED);
+
+            imageView = (ImageView) findViewById(R.id.imageViewMap);
+
+
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
+                    R.drawable.building_plan);
+
+            Bitmap bitmapMutable = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+
+            Canvas canvas = new Canvas(bitmapMutable);
+
+            //canvas.drawRect(-1000,-1000,2000,2000, paintRed);
+
+            canvas.drawCircle((float) globalPosition.x, (float) globalPosition.y, 10, paintRed);
+
+            imageView.setImageBitmap(bitmapMutable);
+
+            mAttacher = new PhotoViewAttacher(imageView);
+
+        }
+// If you later call mImageView.setImageDrawable/setImageBitmap/setImageResource/etc then you just need to call
+//        mAttacher.update();
+    }
+
+
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_map, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
+}

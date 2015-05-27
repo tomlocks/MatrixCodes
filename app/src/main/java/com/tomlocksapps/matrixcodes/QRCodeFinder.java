@@ -3,7 +3,6 @@ package com.tomlocksapps.matrixcodes;
 import android.util.Log;
 
 import com.tomlocksapps.matrixcodes.model.FinderPattern;
-import com.tomlocksapps.matrixcodes.model.FinderPattern2;
 import com.tomlocksapps.matrixcodes.model.QRCode;
 import com.tomlocksapps.matrixcodes.utils.CountourAreaComparator;
 

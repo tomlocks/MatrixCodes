@@ -2,14 +2,19 @@ package com.tomlocksapps.matrixcodes;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.google.zxing.qrcode.encoder.QRCode;
+import com.tomlocksapps.matrixcodes.model.QRCodeContent;
+import com.tomlocksapps.matrixcodes.utils.Log;
 import com.tomlocksapps.matrixcodes.view.DrawView;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -31,7 +36,7 @@ public class MainActivity extends Activity implements CameraHelper.OnImagePrevie
         public void onManagerConnected(int status) {
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS: {
-                    Log.i("testTEST", "OpenCV loaded successfully");
+                    Log.d("OpenCV loaded successfully", Log.LogType.OPENCV, this);
 
                     ((MatrixCodesApplication) getApplication()).setOpenCVLoaded(true);
 
@@ -74,11 +79,26 @@ public class MainActivity extends Activity implements CameraHelper.OnImagePrevie
         Camera.Size previewSize = cameraHelper.getParameters().getSupportedPreviewSizes().get(cameraHelper.getParameters().getSupportedPreviewSizes().size() - 4);
 //        Camera.Size previewSize = cameraHelper.getParameters().getSupportedPreviewSizes().get(0);
 
-        Log.d("size", "pictureSize: " + pictureSize.height + " | " + pictureSize.width + " previewSize: " + previewSize.height + " | " + previewSize.width);
+//        Log.d("size", "pictureSize: " + pictureSize.height + " | " + pictureSize.width + " previewSize: " + previewSize.height + " | " + previewSize.width);
 
+        Log.d("MODEL: "+ Build.MODEL, Log.LogType.CAMERA, this);
+
+        Log.d("pictureSize: " + pictureSize.height + " | " + pictureSize.width + " previewSize: " + previewSize.height + " | " + previewSize.width, Log.LogType.CAMERA, this);
 
         cameraHelper.setPictureSize(pictureSize);
-        cameraHelper.setPreviewSize(previewSize); // 3
+        cameraHelper.setPreviewSize(previewSize);
+
+        imageViewPreview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, MapActivity.class);
+                i.putExtra(MapActivity.BUNDLE_GLOBAL_X, 100);
+                i.putExtra(MapActivity.BUNDLE_GLOBAL_Y, 150);
+                startActivity(i);
+            }
+        });
+
+
     }
 
 
