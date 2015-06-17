@@ -270,17 +270,17 @@ public class QRCode {
     }
 
 
-    private double computeDistance() {
-        Point vect1 = new Point();
-        double vertical;
-        double DistanceParam;
-
-        vect1.x = bottomLeftFP.getCenter().x - topLeftFP.getCenter().x;
-        vect1.y = ((bottomLeftFP.getCenter().y - topLeftFP.getCenter().y));
-        vertical = (sqrt(vect1.x * vect1.x + vect1.y * vect1.y));
-        DistanceParam = (CameraModel.getFactor(Build.MODEL) / vertical) * qrCodeContent.getSize()/20;
-
-        return DistanceParam;
-    }
+//    private double computeDistance() {
+//        Point vect1 = new Point();
+//        double vertical;
+//        double DistanceParam;
+//
+//        vect1.x = bottomLeftFP.getCenter().x - topLeftFP.getCenter().x;
+//        vect1.y = ((bottomLeftFP.getCenter().y - topLeftFP.getCenter().y));
+//        vertical = (sqrt(vect1.x * vect1.x + vect1.y * vect1.y));
+//        //DistanceParam = (CameraModel.getFactor(Build.MODEL) / vertical) * qrCodeContent.getSize()/20;
+//
+//        return DistanceParam;
+//    }
 
 }

@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.ArcShape;
@@ -14,6 +15,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.tomlocksapps.matrixcodes.utils.Log;
 
 import org.opencv.core.Point;
 
@@ -42,22 +46,26 @@ public class MapActivity extends Activity {
 
         if(i!=null) {
 
-            globalPosition = new Point(i.getFloatExtra(BUNDLE_GLOBAL_X, -1), i.getFloatExtra(BUNDLE_GLOBAL_Y, -1));
+            float x = (float) i.getDoubleExtra(BUNDLE_GLOBAL_X, -1);
+            float y = (float) i.getDoubleExtra(BUNDLE_GLOBAL_Y, -1);
+
+            globalPosition = new Point(x, y);
+
+            Toast.makeText(this, "X: " + x + "| y: " + y, Toast.LENGTH_SHORT).show();
 
             paintRed = new Paint(Paint.ANTI_ALIAS_FLAG);
             paintRed.setColor(Color.RED);
 
             imageView = (ImageView) findViewById(R.id.imageViewMap);
 
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inScaled = false;
 
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.building_plan);
+            Bitmap bitmap  = BitmapFactory.decodeResource(getResources(), R.drawable.building_plan, o);
 
             Bitmap bitmapMutable = bitmap.copy(Bitmap.Config.ARGB_8888, true);
 
             Canvas canvas = new Canvas(bitmapMutable);
-
-            //canvas.drawRect(-1000,-1000,2000,2000, paintRed);
 
             canvas.drawCircle((float) globalPosition.x, (float) globalPosition.y, 10, paintRed);
 

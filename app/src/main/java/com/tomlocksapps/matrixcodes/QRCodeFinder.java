@@ -41,103 +41,9 @@ public class QRCodeFinder {
 //        return qr;
 //    }
 
-    public static Point findFocus(Mat image) {
-        Mat imageCanny = Mat.zeros(image.size(), image.type());
-
-        Imgproc.Canny(image, imageCanny, 100, 300);
-
-        List<MatOfPoint> contours = new LinkedList<MatOfPoint>();
-        List<MatOfPoint> contoursFinderPattern = new LinkedList<MatOfPoint>();
-
-        Mat hierarchy = new Mat(100, 100, CvType.CV_32SC4);
-
-        Imgproc.findContours(imageCanny, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-
-        int[] hier = new int[(int) hierarchy.total() * hierarchy.channels()];
-
-        hierarchy.get(0, 0, hier);
-
-        int  childCount = 5;
-
-
-
-        do{
-
-        for (int i = 0; contours.size() > i; i++) {
-
-//                Imgproc.drawContours(image, contours, i, Scalar.all(255), 3);
-
-            int k = i;
-            int c = 0;
-
-            while (hier[k * 4 + 2] != -1) {
-                k = hier[k * 4 + 2];
-                c = c + 1;
-            }
-            if (hier[k * 4 + 2] != -1)
-                c = c + 1;
-
-            if (c >= childCount) {
-                double areaK = Imgproc.contourArea(contours.get(k));
-                double areaI = Imgproc.contourArea(contours.get(i));
-
-                Log.d("area", "findFocus child area: " + areaI / areaK);
-
-                if (4.5 < areaI / areaK && areaI / areaK < 7.5) {
-                    contoursFinderPattern.add(contours.get(i));
-                 //   Imgproc.drawContours(image, contours, i, Scalar.all(255), 5);
-                }
-            }
-        }
-
-                    childCount--;
-        }  while(contoursFinderPattern.size() < 4 && childCount >= 3);
-
-        Log.d("area", "findFocus" + childCount);
-
-        Log.d("area", "findFocus area: contoursFinderPattern" + contoursFinderPattern.size() );
-
-        // compute mass centers
-
-        if(contoursFinderPattern.size() > 0) {
-
-            List<Point> mc = new ArrayList<Point>();
-
-            for (int i = 0; contoursFinderPattern.size() > i; i++) {
-
-                Moments mu = Imgproc.moments(contoursFinderPattern.get(i));
-                mc.add(new Point(mu.get_m10() / mu.get_m00(), mu.get_m01() / mu.get_m00()));
-
-            }
-
-
-            Point center = mc.get(0);
-
-            return center;
-        }
-
-        return null;
-
-
-    }
-
     public static QRCode findFinderPattern(Mat image, boolean debug) {
 
-
-
-
-
-
         Mat imageCanny = Mat.zeros(image.size(), image.type());
-
-        if(false){
-//           Imgproc.threshold(image, image, 100, 255, Imgproc.THRESH_BINARY_INV);
-//            Imgproc.dilate(image,image,Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(4,4)));
-//            Imgproc.erode(image,image,Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(6,6)));
-
-     //       Imgproc.medianBlur(image,image, 5);
-
-        }
 
         Imgproc.Canny(image, imageCanny, 100, 300);
 
@@ -338,8 +244,10 @@ public class QRCodeFinder {
             Moments mu = Imgproc.moments(contoursFinderPattern.get(i));
             mc.add(new Point(mu.get_m10() / mu.get_m00(), mu.get_m01() / mu.get_m00()));
 
-            if(debug)
-            Imgproc.drawContours(contoursDrawing, contoursFinderPattern, i, Scalar.all(100), 5);
+//            if(debug)
+//                Core.circle(image,mc.get(i), 4, new Scalar(255, 255, 255), 4);
+//              Imgproc.drawContours(image, contoursFinderPattern, i, Scalar.all(255), 5);
+
         }
 
 
@@ -353,48 +261,6 @@ public class QRCodeFinder {
             int rightTopIndex = 0;
             int leftBottomIndex = 0;
             int leftTopIndex = 0;
-
-            List<RotatedRect> minAreaRects = new ArrayList<RotatedRect>(3);
-            List<Rect> boundingRects= new ArrayList<Rect>(3);
-
-
-
-            for (MatOfPoint contourFinderPattern : contoursFinderPattern) {
-                minAreaRects.add(Imgproc.minAreaRect(new MatOfPoint2f(contourFinderPattern.toArray())));
-                boundingRects.add(Imgproc.boundingRect(contourFinderPattern));
-
-
-             //   boundingRects.add(Imgproc.boundingRect(new MatOfPoint(contourFinderPattern.toArray())));
-
-            }
-
-
-//            for (Rect rect : boundingRects) {
-//              Core.rectangle(image, new Point(rect.x, rect.y), new Point(rect.x+rect.width, rect.y + rect.height), Scalar.all(100) , 5);
-//
-//                //   boundingRects.add(Imgproc.boundingRect(new MatOfPoint(contourFinderPattern.toArray())));
-//
-//            }
-
-
-            for (RotatedRect areaRect : minAreaRects) {
-                double blob_angle_deg = areaRect.angle;
-                if (areaRect.size.width < areaRect.size.height) {
-                    blob_angle_deg = 0 + blob_angle_deg; // 90
-                }
-
-                Log.d("areaRect", "areaRect angle: " + blob_angle_deg + " center: " + areaRect.center);
-            }
-
-//            for(RotatedRect r :minAreaRects ) {
-//                Point[] pt = new Point[4];
-//                r.points(pt);
-//
-//                for(int i=0; pt.length > i ; i++) {
-//                    pt[i] = ImageUtils.rotatePoint(pt[i], r.angle);
-//                    Core.circle(contoursDrawing, pt[i], 20, new Scalar(100, 100, 100), 2);
-//                }
-//            }
 
 
             Log.d("areaRect", "areaRect angle: ----------- ");
@@ -416,7 +282,6 @@ public class QRCodeFinder {
 
             Log.d("TopLeft", "Center:  " + center.toString()  + " -- leftTop: " + mc.get(leftTopIndex).toString() );
 
-            double angle = 0;
 
             if(mc.get((maxIndex + 2) % 3).y > center.y) {
                 Log.d("TopLeft", "TopLeft :  TOP"  );
@@ -430,7 +295,6 @@ public class QRCodeFinder {
                }
             } else if(mc.get((maxIndex + 2) % 3).y < center.y){
                 Log.d("TopLeft", "TopLeft :  BOTTOM"  );
-                angle = 90;
                 if((mc.get(maxIndex).x < mc.get((maxIndex + 1) % 3).x)) {
                     leftBottomIndex = maxIndex;
                     rightTopIndex        = (maxIndex + 1) % 3;
@@ -449,8 +313,8 @@ public class QRCodeFinder {
 //            Imgproc.drawContours(image, contoursFinderPattern, 2,  new Scalar(200,0,200), 5);
 
 
-            if(debug)
-            Core.line(image, mc.get(maxIndex), mc.get((maxIndex + 1) % 3), new Scalar(100, 100, 100), 5);
+//            if(debug )
+//            Core.line(image, mc.get(maxIndex), mc.get((maxIndex + 1) % 3), new Scalar(100, 100, 100), 5);
 
 
             FinderPattern topLeft = new FinderPattern(contoursFinderPattern.get(leftTopIndex), FinderPattern.SquarePosition.TOP_LEFT, center, mc.get(leftTopIndex));

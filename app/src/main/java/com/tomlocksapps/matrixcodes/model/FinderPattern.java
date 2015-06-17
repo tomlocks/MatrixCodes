@@ -60,11 +60,11 @@ public class FinderPattern {
             bottomLeft = p2;
         }
 
-        reArrangePoints();
+        reOrderPoints();
 
     }
 
-    private void reArrangePoints() {
+    private void reOrderPoints() {
         PointIndex temp;
         switch (squarePosition) {
             case TOP_LEFT:

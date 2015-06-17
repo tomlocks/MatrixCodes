@@ -1,6 +1,7 @@
 package com.tomlocksapps.matrixcodes;
 
 
+import com.tomlocksapps.matrixcodes.model.CameraModelHelper;
 import com.tomlocksapps.matrixcodes.model.QRCode;
 
 import org.opencv.core.Point;
@@ -21,17 +22,17 @@ public class MathOpertions {
     private Point leftTop;
     private Point rightTop;
     private double scale;
-    private double cameraFactor;
+    private CameraModelHelper.CameraModelParameters cameraModelParameters;
     private QRCode.UserPosition userPosition;
     private double distanceToCode;
     private double codeAngle;
 
-    public MathOpertions(Point leftBottom, Point leftTop, Point rightTop, double scale, double cameraFactor, QRCode.UserPosition userPosition) {
+    public MathOpertions(Point leftBottom, Point leftTop, Point rightTop, double scale, CameraModelHelper.CameraModelParameters cameraModelParameters, QRCode.UserPosition userPosition) {
         this.leftBottom = leftBottom;
         this.leftTop = leftTop;
         this.rightTop = rightTop;
-        this.scale = scale / 20;
-        this.cameraFactor = cameraFactor;
+        this.scale = scale / 19.6; //
+        this.cameraModelParameters = cameraModelParameters;
         this.userPosition = userPosition;
         this.distanceToCode = distanceMath();
         this.codeAngle = degreeMath();
@@ -105,11 +106,13 @@ public class MathOpertions {
         double vertical;
         double DistanceParam;
 
+
+
         vect1.x = leftBottom.x - leftTop.x;
         vect1.y = ((leftBottom.y - leftTop.y));
         vertical = (sqrt(vect1.x * vect1.x + vect1.y * vect1.y));
-        DistanceParam = (cameraFactor / vertical) * scale;
-
+        //DistanceParam = (cameraFactor / vertical) * scale;
+        DistanceParam = cameraModelParameters.getFactor()*Math.pow(vertical, cameraModelParameters.getPowerOf())*scale;
         return DistanceParam;
     }
 

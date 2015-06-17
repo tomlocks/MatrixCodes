@@ -3,7 +3,7 @@
 
     <string name="app_name">Matrix Codes</string>
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_resolution_change">Resolution</string>
     <string name="title_activity_map">MapActivity</string>
 
 </resources>

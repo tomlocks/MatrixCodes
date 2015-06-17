@@ -1,12 +1,16 @@
 package com.tomlocksapps.matrixcodes;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -20,6 +24,9 @@ import com.tomlocksapps.matrixcodes.view.DrawView;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends Activity implements CameraHelper.OnImagePreviewListener {
@@ -76,7 +83,7 @@ public class MainActivity extends Activity implements CameraHelper.OnImagePrevie
         //     cameraHelper.setPictureSize(cameraHelper.getParameters().getSupportedPictureSizes().get(cameraHelper.getParameters().getSupportedPictureSizes().size()-3));
         Camera.Size pictureSize = cameraHelper.getParameters().getSupportedPictureSizes().get(cameraHelper.getParameters().getSupportedPictureSizes().size() - 2);
 
-        Camera.Size previewSize = cameraHelper.getParameters().getSupportedPreviewSizes().get(cameraHelper.getParameters().getSupportedPreviewSizes().size() - 4);
+        Camera.Size previewSize = cameraHelper.getParameters().getSupportedPreviewSizes().get(0);
 //        Camera.Size previewSize = cameraHelper.getParameters().getSupportedPreviewSizes().get(0);
 
 //        Log.d("size", "pictureSize: " + pictureSize.height + " | " + pictureSize.width + " previewSize: " + previewSize.height + " | " + previewSize.width);
@@ -85,18 +92,20 @@ public class MainActivity extends Activity implements CameraHelper.OnImagePrevie
 
         Log.d("pictureSize: " + pictureSize.height + " | " + pictureSize.width + " previewSize: " + previewSize.height + " | " + previewSize.width, Log.LogType.CAMERA, this);
 
+        for(Camera.Size size :cameraHelper.getParameters().getSupportedPreviewSizes()) {
+            Log.d("supportedPreviewSize: " +  size.width + "|" + size.height, Log.LogType.CAMERA, this);
+        }
+
+
+//        Intent i = new Intent(this, MapActivity.class);
+//        i.putExtra(MapActivity.BUNDLE_GLOBAL_X, 100d);
+//        i.putExtra(MapActivity.BUNDLE_GLOBAL_Y, 200d);
+//        startActivity(i);
+
+
         cameraHelper.setPictureSize(pictureSize);
         cameraHelper.setPreviewSize(previewSize);
 
-        imageViewPreview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, MapActivity.class);
-                i.putExtra(MapActivity.BUNDLE_GLOBAL_X, 100);
-                i.putExtra(MapActivity.BUNDLE_GLOBAL_Y, 150);
-                startActivity(i);
-            }
-        });
 
 
     }
@@ -130,4 +139,60 @@ public class MainActivity extends Activity implements CameraHelper.OnImagePrevie
     public void onImagePreview(Bitmap bmp) {
         imageViewPreview.setImageBitmap(bmp);
     }
+
+        @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_resolution_change) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+
+            List<Camera.Size> previewSizes = cameraHelper.getParameters().getSupportedPreviewSizes();
+
+            List<CharSequence> resolutionLabels = new ArrayList<CharSequence>(previewSizes.size());
+
+//            CharSequence[] resolutionLabels = new CharSequence[previewSizes.size()];
+
+                    for(Camera.Size size : previewSizes) {
+                        String label = size.height+"x"+size.width;
+                        resolutionLabels.add(label);
+                    }
+
+            CharSequence[] resolutionLabelsArray = resolutionLabels.toArray(new CharSequence[resolutionLabels.size()]);
+// Foo[] array = list.toArray(new Foo[list.size()]);
+
+            builder.setItems(resolutionLabelsArray, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Camera.Size previewSize = cameraHelper.getParameters().getSupportedPreviewSizes().get(which);
+                    cameraHelper.setPreviewSize(previewSize);
+
+                    Log.d("AppResults: ; ---------- New Resolution:  "+previewSize.width+ "x" + previewSize.height+" -----------------------", Log.LogType.OTHER, this);
+                    Log.d("CameraModel: ; ---------- New Resolution:  "+previewSize.width+ "x" + previewSize.height+" -----------------------", Log.LogType.OTHER, this);
+                }
+            });
+
+            AlertDialog alertDialog = builder.create();
+
+            alertDialog.show();
+
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }

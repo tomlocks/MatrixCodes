@@ -7,8 +7,29 @@
     <FrameLayout
         android:id="@+id/camera_preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
+
+
     </FrameLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="Rozpocznij"
+        android:id="@+id/buttonStart"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="separator"
+        android:id="@+id/buttonSeparator"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
 
 
     <com.tomlocksapps.matrixcodes.view.DrawView
@@ -29,8 +50,17 @@
 
 
 
-    <ImageView
+    <!--<ImageView-->
 
+        <!--android:id="@+id/imageViewPreview"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+
+
+       <!--/>-->
+
+    <ImageView
+        android:visibility="visible"
         android:id="@+id/imageViewPreview"
         android:layout_width="100dp"
         android:layout_height="100dp"
