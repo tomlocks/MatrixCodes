@@ -5,5 +5,12 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_resolution_change">Resolution</string>
     <string name="title_activity_map">MapActivity</string>
+    <string name="dialog_distance_distance_question_title">Nie można odnaleźć kodu</string>
+    <string name="dialog_distance_distance_question_description">Skaner nie mógł odnaleźć kodu, podaj swoją szacowaną odległość</string>
+
+    <string name="dialog_distance_distance_less">Mniej niż %sm</string>
+    <string name="dialog_distance_distance_more">Więcej niż %sm</string>
+    <string name="start_again">Rozpocznij od nowa</string>
+
 
 </resources>

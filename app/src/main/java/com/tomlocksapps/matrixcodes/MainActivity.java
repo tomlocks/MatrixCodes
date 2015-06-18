@@ -110,6 +110,14 @@ public class MainActivity extends Activity implements CameraHelper.OnImagePrevie
 
     }
 
+    @Override
+    protected  void onStart() {
+        super.onStart();
+
+        com.tomlocksapps.matrixcodes.utils.Log.d("onStart", com.tomlocksapps.matrixcodes.utils.Log.LogType.LIFECYCLE, this);
+
+        cameraHelper.onStart();
+    }
 
     @Override
     protected void onResume() {
@@ -137,10 +145,16 @@ public class MainActivity extends Activity implements CameraHelper.OnImagePrevie
 
     @Override
     public void onImagePreview(Bitmap bmp) {
+        imageViewPreview.setVisibility(View.VISIBLE);
         imageViewPreview.setImageBitmap(bmp);
     }
 
-        @Override
+    @Override
+    public void onImageVisiblityChange(int state) {
+        imageViewPreview.setVisibility(state);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
