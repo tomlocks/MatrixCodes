@@ -12,12 +12,12 @@ public class UserStateController {
     private UserState farState;
 
     private static final int MIN_DISTANCE = 1;
-    private static final int MAX_DISTANCE = 2;
+    private static final int MAX_DISTANCE = 3;
 
     public UserStateController(Context context) {
         closeState = new CloseState(this, context,  7, MIN_DISTANCE);
-        middleState = new MiddleState(this, context,  5, MIN_DISTANCE, MAX_DISTANCE);
-        farState = new FarState(this, context,  3, MAX_DISTANCE);
+        middleState = new MiddleState(this, context,  4, MIN_DISTANCE, MAX_DISTANCE);
+        farState = new FarState(this, context,  1, MAX_DISTANCE);
 
         state = middleState;
     }
