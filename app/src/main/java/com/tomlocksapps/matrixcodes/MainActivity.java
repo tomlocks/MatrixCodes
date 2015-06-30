@@ -116,7 +116,7 @@ public class MainActivity extends Activity implements CameraHelper.OnImagePrevie
 
         com.tomlocksapps.matrixcodes.utils.Log.d("onStart", com.tomlocksapps.matrixcodes.utils.Log.LogType.LIFECYCLE, this);
 
-        cameraHelper.onStart();
+//        cameraHelper.onStart();
     }
 
     @Override
@@ -126,6 +126,7 @@ public class MainActivity extends Activity implements CameraHelper.OnImagePrevie
         com.tomlocksapps.matrixcodes.utils.Log.d("onResume", com.tomlocksapps.matrixcodes.utils.Log.LogType.LIFECYCLE, this);
 
         OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_2, this, mLoaderCallback);
+
 
         cameraHelper.onResume();
     }
@@ -207,6 +208,21 @@ public class MainActivity extends Activity implements CameraHelper.OnImagePrevie
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onRestoreInstanceState(Bundle icicle) {
+        super.onRestoreInstanceState(icicle);
+
+        cameraHelper.onRestoreInstanceState(icicle);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle icicle) {
+        super.onSaveInstanceState(icicle);
+
+        cameraHelper.onSaveInstanceState(icicle);
     }
 
 }

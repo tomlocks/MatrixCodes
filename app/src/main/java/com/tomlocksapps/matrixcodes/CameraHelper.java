@@ -1,6 +1,10 @@
 package com.tomlocksapps.matrixcodes;
 
 import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -46,6 +50,10 @@ import java.util.List;
  * Created by Tomasz on 2014-10-12.
  */
 public class CameraHelper {
+
+    private final static String BUNLDE_PREVIEW_LOCK = "bundleFocusLock";
+
+
 
     private CameraPreview cameraPreview;
     private Camera camera;
@@ -244,8 +252,8 @@ public class CameraHelper {
 
         preview.addView(cameraPreview);
 
-
-//        previewLock = false;
+        if(buttonStartAgain.getVisibility() != View.VISIBLE && !dialogFragment.isVisible())
+            previewLock = false;
 
         cameraInitialized = false;
     }
@@ -364,6 +372,17 @@ public class CameraHelper {
 
                 if (focusCount > FOCUS_COUNT_MAX) {
                     previewLock = true;
+
+                    Fragment fragment = activity.getFragmentManager().findFragmentByTag("distanceFragment");
+
+                    if(fragment != null && fragment instanceof DialogFragment){
+                        DialogFragment dialogFragment = (DialogFragment) fragment;
+                        dialogFragment.dismiss();
+//                        FragmentTransaction transaction = activity.getFragmentManager().beginTransaction();
+//                        transaction.remove(dialogFragment);
+//                        transaction.commit();
+                    }
+
                     dialogFragment.show(activity.getFragmentManager(), "distanceFragment");
                 }
 
@@ -645,5 +664,20 @@ public class CameraHelper {
             }
         }
     };
+
+    public void onRestoreInstanceState(Bundle icicle) {
+        Log.d("onRestoreInstanceState", Log.LogType.LIFECYCLE, this);
+
+        if(icicle != null) {
+            previewLock = icicle.getBoolean(BUNLDE_PREVIEW_LOCK);
+        }
+    }
+
+    public void onSaveInstanceState(Bundle icicle) {
+        Log.d("onSaveInstanceState", Log.LogType.LIFECYCLE, this);
+
+
+        icicle.putBoolean(BUNLDE_PREVIEW_LOCK, previewLock);
+    }
 
 }

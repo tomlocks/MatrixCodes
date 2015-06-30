@@ -10,12 +10,8 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
-import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
-import org.opencv.core.Rect;
-import org.opencv.core.RotatedRect;
 import org.opencv.core.Scalar;
-import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
@@ -48,9 +44,6 @@ public class QRCodeFinder {
         Imgproc.Canny(image, imageCanny, 100, 300);
 
 
-
-
-
         List<MatOfPoint> contours = new LinkedList<MatOfPoint>();
         List<MatOfPoint> contoursFinderPattern = new LinkedList<MatOfPoint>();
 
@@ -65,7 +58,7 @@ public class QRCodeFinder {
 
         hierarchy.get(0, 0, hier);
 
-        Mat contourMat = Mat.zeros(image.size(),  CvType.CV_8UC1);
+        Mat contourMat = Mat.zeros(image.size(), CvType.CV_8UC1);
 
 
 //
@@ -160,40 +153,40 @@ public class QRCodeFinder {
 
 
 //        if(preview)
-            int            childCount = 5;
+        int childCount = 5;
 
 
 //       do {
 
-           Log.d("area", "area: childCount" + childCount);
+        Log.d("area", "area: childCount" + childCount);
 
-            for (int i = 0; contours.size() > i; i++) {
+        for (int i = 0; contours.size() > i; i++) {
 
 //                Imgproc.drawContours(image, contours, i, Scalar.all(255), 3);
 
-                int k = i;
-                int c = 0;
+            int k = i;
+            int c = 0;
 
-                while (hier[k * 4 + 2] != -1) {
-                    k = hier[k * 4 + 2];
-                    c = c + 1;
-                }
-                if (hier[k * 4 + 2] != -1)
-                    c = c + 1;
+            while (hier[k * 4 + 2] != -1) {
+                k = hier[k * 4 + 2];
+                c = c + 1;
+            }
+            if (hier[k * 4 + 2] != -1)
+                c = c + 1;
 
-                if (c >= childCount) {
-                    double areaK = Imgproc.contourArea(contours.get(k));
-                    double areaI = Imgproc.contourArea(contours.get(i));
+            if (c >= childCount) {
+                double areaK = Imgproc.contourArea(contours.get(k));
+                double areaI = Imgproc.contourArea(contours.get(i));
 
-                    Log.d("area", "child area: " + areaI / areaK);
+                Log.d("area", "child area: " + areaI / areaK);
 
-                    if (4.5 < areaI / areaK && areaI / areaK < 7.5) {
-                        contoursFinderPattern.add(contours.get(i));
-                        if(debug)
+                if (4.5 < areaI / areaK && areaI / areaK < 7.5) {
+                    contoursFinderPattern.add(contours.get(i));
+                    if (debug)
                         Imgproc.drawContours(image, contours, i, Scalar.all(255), 5);
-                    }
                 }
             }
+        }
 
 //            childCount--;
 //        }  while(contoursFinderPattern.size() < 4 && childCount >= 3 && !preview);
@@ -251,8 +244,6 @@ public class QRCodeFinder {
         }
 
 
-
-
         //     FinderPattern finderPattern =  new FinderPattern(new Point(0,0),new Point(0,0),new Point(0,0));
         //     finderPattern.setMat(contoursDrawing);
 
@@ -276,36 +267,33 @@ public class QRCodeFinder {
                 }
             }
 
-            Point center = new Point((mc.get(maxIndex).x + mc.get((maxIndex + 1) % 3).x)/2 , (mc.get(maxIndex).y + mc.get((maxIndex + 1) % 3).y)/2);
+            Point center = new Point((mc.get(maxIndex).x + mc.get((maxIndex + 1) % 3).x) / 2, (mc.get(maxIndex).y + mc.get((maxIndex + 1) % 3).y) / 2);
 
             leftTopIndex = (maxIndex + 2) % 3;
 
-            Log.d("TopLeft", "Center:  " + center.toString()  + " -- leftTop: " + mc.get(leftTopIndex).toString() );
+            Log.d("TopLeft", "Center:  " + center.toString() + " -- leftTop: " + mc.get(leftTopIndex).toString());
 
 
-            if(mc.get((maxIndex + 2) % 3).y > center.y) {
-                Log.d("TopLeft", "TopLeft :  TOP"  );
-                if((mc.get(maxIndex).x > mc.get((maxIndex + 1) % 3).x)) {
+            if (mc.get((maxIndex + 2) % 3).y > center.y) {
+                Log.d("TopLeft", "TopLeft :  TOP");
+                if ((mc.get(maxIndex).x > mc.get((maxIndex + 1) % 3).x)) {
                     leftBottomIndex = maxIndex;
-                    rightTopIndex  = (maxIndex + 1) % 3;
-               }
-                else {
-                    leftBottomIndex= (maxIndex + 1) % 3;
-                    rightTopIndex  = maxIndex;
-               }
-            } else if(mc.get((maxIndex + 2) % 3).y < center.y){
-                Log.d("TopLeft", "TopLeft :  BOTTOM"  );
-                if((mc.get(maxIndex).x < mc.get((maxIndex + 1) % 3).x)) {
-                    leftBottomIndex = maxIndex;
-                    rightTopIndex        = (maxIndex + 1) % 3;
+                    rightTopIndex = (maxIndex + 1) % 3;
+                } else {
+                    leftBottomIndex = (maxIndex + 1) % 3;
+                    rightTopIndex = maxIndex;
                 }
-                else {
-                    leftBottomIndex    = (maxIndex + 1) % 3;
+            } else if (mc.get((maxIndex + 2) % 3).y < center.y) {
+                Log.d("TopLeft", "TopLeft :  BOTTOM");
+                if ((mc.get(maxIndex).x < mc.get((maxIndex + 1) % 3).x)) {
+                    leftBottomIndex = maxIndex;
+                    rightTopIndex = (maxIndex + 1) % 3;
+                } else {
+                    leftBottomIndex = (maxIndex + 1) % 3;
                     rightTopIndex = maxIndex;
                 }
             } else
                 return null;
-
 
 
 //            Imgproc.drawContours(image, contoursFinderPattern, 0,  new Scalar(200,0,200), 5);
@@ -326,23 +314,23 @@ public class QRCodeFinder {
             topRight.findAdditionalPoints(topLeft.getCenter());
             bottomLeft.findAdditionalPoints(topLeft.getCenter());
 
-if(debug) {
-    Core.circle(image, topLeft.getTopLeft(), 5, new Scalar(255, 0, 0), 7);
-    Core.circle(image, topLeft.getBottomRight(), 5, new Scalar(0, 0, 255), 7);
-    Core.circle(image, topLeft.getBottomLeft(), 5, new Scalar(0, 255, 255), 7);
-    Core.circle(image, topLeft.getTopRight(), 5, new Scalar(0, 255, 0), 7);
+            if (debug) {
+                Core.circle(image, topLeft.getTopLeft(), 5, new Scalar(255, 0, 0), 7);
+                Core.circle(image, topLeft.getBottomRight(), 5, new Scalar(0, 0, 255), 7);
+                Core.circle(image, topLeft.getBottomLeft(), 5, new Scalar(0, 255, 255), 7);
+                Core.circle(image, topLeft.getTopRight(), 5, new Scalar(0, 255, 0), 7);
 
-    Core.circle(image, topRight.getTopLeft(), 5, new Scalar(255, 0, 0), 7);
-    Core.circle(image, topRight.getBottomRight(), 5, new Scalar(0, 0, 255), 7);
-    Core.circle(image, topRight.getBottomLeft(), 5, new Scalar(0, 255, 255), 7);
-    Core.circle(image, topRight.getTopRight(), 5, new Scalar(0, 255, 0), 7);
+                Core.circle(image, topRight.getTopLeft(), 5, new Scalar(255, 0, 0), 7);
+                Core.circle(image, topRight.getBottomRight(), 5, new Scalar(0, 0, 255), 7);
+                Core.circle(image, topRight.getBottomLeft(), 5, new Scalar(0, 255, 255), 7);
+                Core.circle(image, topRight.getTopRight(), 5, new Scalar(0, 255, 0), 7);
 
-    Core.circle(image, bottomLeft.getTopLeft(), 5, new Scalar(255, 0, 0), 7);
-    Core.circle(image, bottomLeft.getBottomRight(), 5, new Scalar(0, 0, 255), 7);
-    Core.circle(image, bottomLeft.getBottomLeft(), 5, new Scalar(0, 255, 255), 7);
-    Core.circle(image, bottomLeft.getTopRight(), 5, new Scalar(0, 255, 0), 7);
+                Core.circle(image, bottomLeft.getTopLeft(), 5, new Scalar(255, 0, 0), 7);
+                Core.circle(image, bottomLeft.getBottomRight(), 5, new Scalar(0, 0, 255), 7);
+                Core.circle(image, bottomLeft.getBottomLeft(), 5, new Scalar(0, 255, 255), 7);
+                Core.circle(image, bottomLeft.getTopRight(), 5, new Scalar(0, 255, 0), 7);
 
-}
+            }
 
 
             QRCode qrCode = new QRCode(topLeft, topRight, bottomLeft);
@@ -399,7 +387,6 @@ if(debug) {
 //                    mc.get(leftBottomIndex).y + 0.5d*(s.height*Math.cos(Math.toRadians(minAreaRects.get(leftBottomIndex).angle)) - s.width*Math.sin(Math.toRadians(minAreaRects.get(leftBottomIndex).angle))));
 
 
-
 //            Core.circle(contoursDrawing, mc.get(leftTopIndex), 20, new Scalar(100, 100, 100), 2);
 //            Core.circle(contoursDrawing, mc.get(rightTopIndex), 5, new Scalar(25, 25, 25), 20);
 //            Core.circle(contoursDrawing, mc.get(leftBottomIndex), 5, new Scalar(255, 255, 255), 5);
@@ -408,9 +395,6 @@ if(debug) {
 //            Core.circle(contoursDrawing, leftTopBorder, 20, new Scalar(100, 100, 100), 2);
 //            Core.circle(contoursDrawing, rightTopBorder, 5, new Scalar(25, 25, 25), 20);
 //            Core.circle(contoursDrawing, leftBottomBorder, 5, new Scalar(255, 255, 255), 5);
-
-
-
 
 
 //            finderPattern = new FinderPattern(mc.get(leftTopIndex), mc.get(rightTopIndex), mc.get(leftBottomIndex), contoursFinderPattern.get(leftTopIndex).toArray()[leftTopBorderIndex], contoursFinderPattern.get(rightTopIndex).toArray()[rightTopBorderIndex], contoursFinderPattern.get(leftBottomIndex).toArray()[leftBottomBorderIndex]);
@@ -458,13 +442,11 @@ if(debug) {
 //
 
 
-
 //            Point[] rightTopBorder = ImageUtils.getThreeEdges(contoursFinderPattern.get(rightTopIndex), center, mc.get(leftTopIndex));
 //            Point[] leftBottomBorder = ImageUtils.getThreeEdges(contoursFinderPattern.get(leftBottomIndex), center, mc.get(leftTopIndex));
 
 //            Point[] rightTopBorder = ImageUtils.getFourEdges(contoursFinderPattern.get(rightTopIndex));
 //            Point[] leftBottomBorder = ImageUtils.getFourEdges(contoursFinderPattern.get(leftBottomIndex));
-
 
 
 //            rightTopBorder[0] = ImageUtils.getMaximumLengthBetweenContourAndPoint(contoursFinderPattern.get(rightTopIndex), center);
@@ -490,8 +472,7 @@ if(debug) {
 //            Core.circle(contoursDrawing, leftTopBorder, 20, new Scalar(100, 100, 100), 2);
 //            Core.circle(contoursDrawing, leftBottomBorder[1], 20, new Scalar(100, 100, 100), 2);
 
-       //     rightTopBorder, leftBottomBorder
-
+            //     rightTopBorder, leftBottomBorder
 
 
             //minAreaRects
@@ -504,7 +485,6 @@ if(debug) {
 //            ImageUtils.findEdges2(contoursFinderPattern.get(leftTopIndex), leftTop, )
 
 
-
 //            Log.d("contour" , "contour size: " +       contoursFinderPattern.get(leftTopIndex).toArray().length);
 //            Log.d("contour" , "contour: " +       contoursFinderPattern.get(leftTopIndex).toArray()[0].x + " | " + contoursFinderPattern.get(leftTopIndex).toArray()[0].y);
 //
@@ -513,7 +493,6 @@ if(debug) {
 //
 //
 //            Log.d("contour" , "contour: " +       contoursFinderPattern.get(leftTopIndex).toArray()[10].x + " | " + contoursFinderPattern.get(leftTopIndex).toArray()[10].y);
-
 
 
 //            Core.circle(contourMat, fff, 5, new Scalar(255,255,255), 10);
@@ -555,7 +534,6 @@ if(debug) {
 //            Core.circle(image, finderPattern.getRightTopBorder()[3], 3, new Scalar(0, 255, 0), 3);
 
 
-
 //            Core.circle(image, finderPattern.getLeftBottom(), 5, new Scalar(255, 0 , 0), 5);
 //            Core.circle(image, finderPattern.getRightTop(), 5, new Scalar(0,  255, 0), 5);
 //            Core.circle(image, finderPattern.getLeftTop(), 5, new Scalar(0, 0, 255), 5);
@@ -567,7 +545,6 @@ if(debug) {
 //                Core.circle(image, ff, 3, new Scalar(0, 0, 255), 5);
 //
 //            finderPattern2.contours = contourMat;
-
 
 
 //            finderPattern2.setMat(image);
