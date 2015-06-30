@@ -79,14 +79,9 @@ public class MainActivity extends Activity implements CameraHelper.OnImagePrevie
 
         imageViewPreview = (ImageView) findViewById(R.id.imageViewPreview);
 
-        // TODO - check the length of supported picture sizes!
-        //     cameraHelper.setPictureSize(cameraHelper.getParameters().getSupportedPictureSizes().get(cameraHelper.getParameters().getSupportedPictureSizes().size()-3));
         Camera.Size pictureSize = cameraHelper.getParameters().getSupportedPictureSizes().get(cameraHelper.getParameters().getSupportedPictureSizes().size() - 2);
 
         Camera.Size previewSize = cameraHelper.getParameters().getSupportedPreviewSizes().get(0);
-//        Camera.Size previewSize = cameraHelper.getParameters().getSupportedPreviewSizes().get(0);
-
-//        Log.d("size", "pictureSize: " + pictureSize.height + " | " + pictureSize.width + " previewSize: " + previewSize.height + " | " + previewSize.width);
 
         Log.d("MODEL: "+ Build.MODEL, Log.LogType.CAMERA, this);
 
@@ -95,12 +90,6 @@ public class MainActivity extends Activity implements CameraHelper.OnImagePrevie
         for(Camera.Size size :cameraHelper.getParameters().getSupportedPreviewSizes()) {
             Log.d("supportedPreviewSize: " +  size.width + "|" + size.height, Log.LogType.CAMERA, this);
         }
-
-
-//        Intent i = new Intent(this, MapActivity.class);
-//        i.putExtra(MapActivity.BUNDLE_GLOBAL_X, 100d);
-//        i.putExtra(MapActivity.BUNDLE_GLOBAL_Y, 200d);
-//        startActivity(i);
 
 
         cameraHelper.setPictureSize(pictureSize);
@@ -116,7 +105,6 @@ public class MainActivity extends Activity implements CameraHelper.OnImagePrevie
 
         com.tomlocksapps.matrixcodes.utils.Log.d("onStart", com.tomlocksapps.matrixcodes.utils.Log.LogType.LIFECYCLE, this);
 
-//        cameraHelper.onStart();
     }
 
     @Override
@@ -136,8 +124,6 @@ public class MainActivity extends Activity implements CameraHelper.OnImagePrevie
         super.onPause();
 
         com.tomlocksapps.matrixcodes.utils.Log.d("onPause", com.tomlocksapps.matrixcodes.utils.Log.LogType.LIFECYCLE, this);
-
-        // get rid of the "method called after release exception"
 
         cameraHelper.onPause();
 
@@ -178,15 +164,12 @@ public class MainActivity extends Activity implements CameraHelper.OnImagePrevie
 
             List<CharSequence> resolutionLabels = new ArrayList<CharSequence>(previewSizes.size());
 
-//            CharSequence[] resolutionLabels = new CharSequence[previewSizes.size()];
-
                     for(Camera.Size size : previewSizes) {
                         String label = size.height+"x"+size.width;
                         resolutionLabels.add(label);
                     }
 
             CharSequence[] resolutionLabelsArray = resolutionLabels.toArray(new CharSequence[resolutionLabels.size()]);
-// Foo[] array = list.toArray(new Foo[list.size()]);
 
             builder.setItems(resolutionLabelsArray, new DialogInterface.OnClickListener() {
                 @Override

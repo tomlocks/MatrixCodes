@@ -10,7 +10,6 @@ public class MatrixCodesApplication extends Application {
 
     private boolean openCVLoaded = false;
 
-
     public boolean isOpenCVLoaded() {
         return openCVLoaded;
     }

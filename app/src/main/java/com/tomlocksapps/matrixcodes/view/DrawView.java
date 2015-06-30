@@ -50,9 +50,6 @@ public class DrawView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-//        canvas.translate(getWidth()/2, getHeight()/2);
-//        drawArrow(canvas);
-
         canvas.drawRect(0,0, getWidth()/4, getHeight(), paintBlack );
         canvas.drawRect(3*getWidth()/4,0, getWidth(), getHeight(), paintBlack );
 
@@ -60,18 +57,6 @@ public class DrawView extends View {
 
         canvas.drawRect(getWidth()/4, 3*getHeight()/4 , 3*getWidth()/4, getHeight(), paintBlack );
 
-//        canvas.drawRect(0,0, getWidth()/4, getHeight(), paintBlack );
-//        canvas.drawRect(0,0, getWidth()/4, getHeight(), paintBlack );
-
-
-
     }
-
-//    protected void drawArrow(Canvas canvas) {
-//        canvas.drawRect(-getWidth()/12, -2*getHeight()/10,  getWidth()/10, 2*getHeight()/12,  p);
-//
-//    }
-
-
 
 }

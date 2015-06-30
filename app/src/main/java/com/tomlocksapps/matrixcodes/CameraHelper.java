@@ -120,8 +120,6 @@ public class CameraHelper {
         dialogFragment.setOnDistanceDialogListener(onDistanceDialogListener);
         dialogFragment.setUserStateController(userStateController);
 
-//        previewLock = true;
-
         buttonStartAgain = (Button) activity.findViewById(R.id.button_start_again);
         buttonStartAgain.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,10 +144,6 @@ public class CameraHelper {
             }
         });
 
-//        this.cameraParameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
-//
-//        camera.setParameters(cameraParameters);
-
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,28 +152,6 @@ public class CameraHelper {
             }
         });
 
-//        preview.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-////                camera.autoFocus(new Camera.AutoFocusCallback() {
-////                    @Override
-////                    public void onAutoFocus(boolean success, Camera camera) {
-////                        if (success)
-////                            camera.takePicture(null, null, pictureCallback);
-////                    }
-////                });
-//
-//                activity.runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        camera.startPreview();
-//
-//                    }
-//                });
-//
-//            }
-//        });
 
         userPositionView = (UserPositionView) activity.findViewById(R.id.userPositionView);
 
@@ -337,21 +309,13 @@ public class CameraHelper {
 
                         qrCode.snipCode(bgrMat);
 
-//                        Bitmap bmp = Bitmap.createBitmap(qrCode.getQrCodeMat().cols(), qrCode.getQrCodeMat().rows(), Bitmap.Config.ARGB_8888);
-//                         Utils.matToBitmap(qrCode.getQrCodeMat(), bmp);
-//
-//                         imageViewPreview.setImageBitmap(bmp);
 
                     }
 
 
                 }
 
-//                Toast.makeText(activity, "picture taken", Toast.LENGTH_SHORT).show();
-
             }
-
-//            camera.startPreview();
 
             previewLock = false;
         }
@@ -378,9 +342,6 @@ public class CameraHelper {
                     if(fragment != null && fragment instanceof DialogFragment){
                         DialogFragment dialogFragment = (DialogFragment) fragment;
                         dialogFragment.dismiss();
-//                        FragmentTransaction transaction = activity.getFragmentManager().beginTransaction();
-//                        transaction.remove(dialogFragment);
-//                        transaction.commit();
                     }
 
                     dialogFragment.show(activity.getFragmentManager(), "distanceFragment");
@@ -398,11 +359,6 @@ public class CameraHelper {
 
                 Imgproc.cvtColor(mYuv, mRgba, Imgproc.COLOR_YUV2RGBA_NV21, 4);
 
-//                Bitmap map = Bitmap.createBitmap(size.width, size.height, Bitmap.Config.ARGB_8888);
-//
-//                Utils.matToBitmap(mRgba, map);
-//
-//                      imageViewPreview.setImageBitmap(map);
 
                 final QRCode qrCode = QRCodeFinder.findFinderPattern(mRgba, false);
 
@@ -411,7 +367,6 @@ public class CameraHelper {
                 if (qrCode == null) {
 
 
-//                    QRCodeFinder.findFocus(mRgba);
 
                     if (camera.getParameters().getMaxNumFocusAreas() > 0 && !previewLock) {
 
@@ -439,8 +394,6 @@ public class CameraHelper {
 
                         android.util.Log.d("focus", "focus rect: " + rect.toString());
 
-                        //          camera.cancelAutoFocus();
-
 
                         Camera.Parameters parameters = camera.getParameters();
                         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
@@ -464,63 +417,7 @@ public class CameraHelper {
 
                 } else {
 
-//                    Bitmap map = Bitmap.createBitmap(size.width, size.height, Bitmap.Config.RGB_565);
-////
-//
-//
-//                    Utils.matToBitmap(mRgba, map);
-
-//                Matrix matrix = new Matrix();
-//                matrix.postRotate(90);
-//                map = Bitmap.createBitmap(map, 0, 0, map.getWidth(), map.getHeight(), matrix, true);
-//                map.setHasAlpha(false);
-
-//                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//                    map.compress(Bitmap.CompressFormat.PNG, 100, bytes);
-//
-////you can create a new file name "test.jpg" in sdcard folder.
-//                    File f = new File(Environment.getExternalStorageDirectory()
-//                            + File.separator + "test.jpg");
-//                    try {
-//                        f.createNewFile();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-////write the bytes in file
-//                    FileOutputStream fo = null;
-//                    try {
-//                        fo = new FileOutputStream(f);
-//                    } catch (FileNotFoundException e) {
-//                        e.printStackTrace();
-//                    }
-//                    try {
-//                        fo.write(bytes.toByteArray());
-//                        fo.close();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-
-// remember close de FileOutput
-
-
-//                    if(onImagePreviewListener!=null)
-////                                onImagePreviewListener.onImagePreview(map2);
-//                        onImagePreviewListener.onImagePreview(map);
-
                     boolean result = qrCode.snipCode(mRgba);
-//                    Mat m = mRgba;
-//                    int rows = m.rows();
-//                    int cols = m.cols();
-//                    Point p1 = new Point();
-//
-//                    p1.x = size.height - qrCode.getTopLeftFP().getCenter().y;
-//                    p1.y = qrCode.getTopLeftFP().getCenter().x;
-
-//                    drawView.setRatio(size);
-//                //    drawView.setPoints(qrCode.getTopLeftFP()
-//                // .getCenter(), qrCode.getTopRightFP().getCenter(), qrCode.getBottomLeftFP().getCenter());
-//                    drawView.setPoints(p1,p1,p1);
-//                    drawView.invalidate();
 
                     android.util.Log.d("focus", "qrCode snipCode: " + result);
                     if (result) {
@@ -529,18 +426,7 @@ public class CameraHelper {
 
                         Utils.matToBitmap(qrCode.getQrCodeMat(), map2);
 
-
-//                        Bitmap map = Bitmap.createBitmap(size.width, size.height, Bitmap.Config.ARGB_8888);
-//
-//                         Utils.matToBitmap(mRgba, map);
-//
-//
-//                        FileUtils.saveBmpToFile(map, "img.png");
-//                        FileUtils.saveBmpToFile(map2, "snip.png");
-
-
                         int[] intArray = new int[map2.getWidth() * map2.getHeight()];
-//copy pixel data from the Bitmap into the 'intArray' array
                         map2.getPixels(intArray, 0, map2.getWidth(), 0, 0, map2.getWidth(), map2.getHeight());
 
 
@@ -552,9 +438,6 @@ public class CameraHelper {
                         String finalResult = "";
                         try {
 
-//                                Map<DecodeHintType, Object> hints = new
-
-
                             //TODO set Hints
                             resultZxing = barcodeReader.decode(bitmap);
 
@@ -563,24 +446,17 @@ public class CameraHelper {
 
                         } catch (com.google.zxing.NotFoundException e) {
                             e.printStackTrace();
-                            //throw new BarcodeEngine().new BarcodeEngineException(e.getMessage());
+
                         }
 
                         if (!finalResult.equals("")) {
-//                            Toast.makeText(activity.getApplicationContext(), finalResult, Toast.LENGTH_SHORT).show();
                             Log.d("UserPosition: " + qrCode.getUserPosition(), Log.LogType.OTHER, this);
 
-
-                            // qrCode.getTopLeftFP().getTopLeft().y - qrCode.getTopLeftFP().getBottomLeft().y
-
-//                            double dist = ImageUtils.calculateDistance(qrCode.getTopLeftFP().getTopLeft(), qrCode.getTopLeftFP().getBottomLeft());
                             Double dist2w = ImageUtils.calculateDistance(qrCode.getTopLeftFP().getTopLeft(), qrCode.getTopRightFP().getTopRight());
 
 
                             Log.d("CameraModel: ;" + Build.MODEL + "; " + size.width + "x" + +size.height + ";" + dist2w, Log.LogType.OTHER, this);
 
-
-//                            Log.d("DistancePoints: " + dist2w, Log.LogType.OTHER, this);
 
                             previewActive = false;
 
@@ -602,13 +478,7 @@ public class CameraHelper {
                                         qrCode.getQrCodeContent().getSize(), CameraModelHelper.getFactor(Build.MODEL, size), userPosition);
 
 
-                                if (userPosition == QRCode.UserPosition.DOWN) {
-                                    Toast.makeText(activity, "Podnies telefon", Toast.LENGTH_SHORT).show();
-                                    //drawView.startAnimation(new TranslateAnimation());
-                                } else if (userPosition == QRCode.UserPosition.UP) {
-                                    Toast.makeText(activity, "Obniz telefon", Toast.LENGTH_SHORT).show();
-                                    //drawView.startAnimation(new TranslateAnimation());
-                                }
+
 
                                 Log.d("UserPosition degree: " + mathOpertions.getCodeAngle() + " distance: " + mathOpertions.getDistanceToCode() + ", position:" + userPosition, Log.LogType.OTHER, this);
                                 globalPosition = GlobalPosition.getGlobalPosition(qrCode.getQrCodeContent().getP(), qrCode.getQrCodeContent().getAngle(), mathOpertions.getDistanceToCode(), mathOpertions.getCodeAngle());
@@ -630,7 +500,6 @@ public class CameraHelper {
 
                             }
 
-                            //camera.cancelAutoFocus();
                             focusCount = 0;
 
                             previewLock = true;
@@ -641,8 +510,6 @@ public class CameraHelper {
 
                             if (onImagePreviewListener != null)
                                 onImagePreviewListener.onImagePreview(map2);
-//                                onImagePreviewListener.onImagePreview(map);
-//                            camera.stopPreview();
 
                             return;
                         }

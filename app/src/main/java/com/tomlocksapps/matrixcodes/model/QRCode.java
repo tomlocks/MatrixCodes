@@ -72,57 +72,6 @@ public class QRCode {
         this.fourthPoint =  ImageUtils.calculateFourthPoint(topRightFP.getTopRight(), topRightFP.getBottomRight(),
                 bottomLeftFP.getBottomLeft(), bottomLeftFP.getBottomRight());
 
-
-
-
-//        int fX = (int) (finderPattern.getLeftBottom().x - finderPattern.getLeftTop().x);
-//        int fY = (int) (finderPattern.getLeftBottom().y - finderPattern.getLeftTop().y);
-//
-//        Point fff = new Point(finderPattern.getRightTop().x + fX+20 , finderPattern.gettopRightFP.getCenter()().y + fY+20);
-
-
-
-        //Core.circle(srcMat, fff, 2, new Scalar(255, 255, 255), 5);
-
-//        Point ff =  ImageUtils.calculateFourthPoint(finderPattern2.getLeftBottomBorder()[0], finderPattern2.getLeftBottomBorder()[1],
-//                finderPattern2.gettopRightFP.getCenter()Border()[0], finderPattern2.getRightTopBorder()[1]);
-//
-//
-//        int offset = (int)ImageUtils.calculateDistance(finderPattern2.getLeftBottom(), finderPattern2.getLeftTop())/4;
-//
-//        if(ff != null) {
-//
-//            MatOfPoint2f src = new MatOfPoint2f(finderPattern2.getRightTopBorder()[0], finderPattern2.getLeftTopBorder(), finderPattern2.getLeftBottomBorder()[0], ff);
-//            MatOfPoint2f dest = new MatOfPoint2f(new Point(offset, qrCodeMat.cols() - offset), new Point(offset, offset), new Point(qrCodeMat.rows() - offset, offset), new Point(qrCodeMat.rows() - offset, qrCodeMat.cols() - offset));
-//
-//
-//            Core.circle(srcMat, ff, 2, new Scalar(150, 150, 150) , 5);
-//            Log.d("Fourth Point","Fourth Point: " + ff.toString());
-//
-//
-////        MatOfPoint2f src = new MatOfPoint2f( finderPattern.getRightTop(), finderPattern.getLeftTop(), finderPattern.getLeftBottom(), fff);
-////        MatOfPoint2f dest = new MatOfPoint2f(new Point(offset, qrCodeMat.cols() - offset), new Point(offset,offset), new Point(qrCodeMat.rows() - offset, offset), new Point(qrCodeMat.rows() - offset,qrCodeMat.cols() - offset));
-////
-////        MatOfPoint2f src = new MatOfPoint2f( finderPattern.getRightTop(), finderPattern.getLeftTop(), finderPattern.getLeftBottom(), fff);
-////        MatOfPoint2f dest = new MatOfPoint2f(new Point( qrCodeMat.cols() - offset,offset), new Point(offset,offset), new Point(offset,qrCodeMat.rows() - offset), new Point(qrCodeMat.rows() - offset,qrCodeMat.cols() - offset));
-//
-////        MatOfPoint2f src = new MatOfPoint2f( finderPattern.getRightTop(), finderPattern.getLeftTop(), finderPattern.getLeftBottom());
-////        MatOfPoint2f dest = new MatOfPoint2f(new Point( qrCodeMat.cols() - offset,offset), new Point(offset,offset), new Point(offset,qrCodeMat.rows() - offset));
-//
-////        Mat warpMat = Imgproc.getAffineTransform(src, dest);
-//
-//            Mat warpMat = Imgproc.getPerspectiveTransform(src, dest);
-//
-//            Imgproc.warpPerspective(srcMat, qrCodeMat, warpMat, qrCodeMat.size());
-//        }
-//        else {
-//            MatOfPoint2f src = new MatOfPoint2f(finderPattern2.getRightTopBorder()[0], finderPattern2.getLeftTopBorder(), finderPattern2.getLeftBottomBorder()[0]);
-//            MatOfPoint2f dest = new MatOfPoint2f(new Point(offset, qrCodeMat.cols() - offset), new Point(offset, offset), new Point(qrCodeMat.rows() - offset, offset) );
-//
-//           Mat warpMat = Imgproc.getAffineTransform(src, dest);
-//
-//            Imgproc.warpAffine(srcMat, qrCodeMat, warpMat, qrCodeMat.size());
-//        }
     }
 
     public boolean snipCode(Mat sourceImage) {
@@ -166,9 +115,6 @@ public class QRCode {
     }
 
     public void computeUserPosition() {
-//        double distLeft = ImageUtils.calculateDistance(topLeftFP.getTopLeft(), bottomLeftFP.getBottomLeft());
-//        double distRight = ImageUtils.calculateDistance(topRightFP.getTopRight(), fourthPoint);
-
         double distLeft = ImageUtils.calculateDistance(topLeftFP.getTopLeft(), topLeftFP.getBottomLeft());
         double distRight = ImageUtils.calculateDistance(topRightFP.getTopRight(), topRightFP.getBottomRight());
 
@@ -176,9 +122,7 @@ public class QRCode {
         double distTop = ImageUtils.calculateDistance(topLeftFP.getTopLeft(), topLeftFP.getTopRight());
         double distBottom = ImageUtils.calculateDistance(bottomLeftFP.getBottomLeft(), bottomLeftFP.getBottomRight());
 
-//        if(Math.abs(distLeft - distTop) < distLeft*0.03) {
-//            userPosition = UserPosition.IN_FRONT_OF;
-//        } else
+
         if(distLeft > distTop) {
             if (distLeft > distRight) {
                 userPosition = UserPosition.LEFT;
@@ -210,77 +154,5 @@ public class QRCode {
         return qrCodeContent;
     }
 
-
-    private void computeDirection() {
-        Point vect1 = new Point();
-        Point vect2 = new Point();
-        double vertical, horizontal;
-        double DegreeParam, DegreeHelper;
-
-
-        vect1.x = bottomLeftFP.getCenter().x - topLeftFP.getCenter().x;
-        vect1.y = ((bottomLeftFP.getCenter().y - topLeftFP.getCenter().y));
-        vect2.x = topRightFP.getCenter().x - topLeftFP.getCenter().x;
-        vect2.y = ((topRightFP.getCenter().y - topLeftFP.getCenter().y));
-
-
-        vertical = (sqrt(vect1.x * vect1.x + vect1.y * vect1.y));
-        horizontal = (sqrt(vect2.x * vect2.x + vect2.y * vect2.y));
-        DegreeHelper = (acos(vertical / horizontal)) * 180 / PI;
-        if (abs(horizontal) < abs(vertical)) {
-            DegreeParam = (acos(horizontal / vertical)) * 180 / PI;
-            direction = true;
-        } else {
-
-            DegreeParam = DegreeHelper;
-            direction = false;
-        }
-    }
-
-    private double cumputeDegree() {
-
-        Point vect1 = new Point();
-        Point vect2 = new Point();
-        double vertical, horizontal;
-        double DegreeParam, DegreeHelper;
-
-
-        vect1.x = bottomLeftFP.getCenter().x - topLeftFP.getCenter().x;
-        vect1.y = ((bottomLeftFP.getCenter().y - topLeftFP.getCenter().y));
-        vect2.x = topRightFP.getCenter().x - topLeftFP.getCenter().x;
-        vect2.y = ((topRightFP.getCenter().y - topLeftFP.getCenter().y));
-
-
-        vertical = (sqrt(vect1.x * vect1.x + vect1.y * vect1.y));
-        horizontal = (sqrt(vect2.x * vect2.x + vect2.y * vect2.y));
-        DegreeHelper = (acos(vertical / horizontal)) * 180 / PI;
-        if (abs(horizontal) < abs(vertical)) {
-            DegreeParam = (acos(horizontal / vertical)) * 180 / PI;
-            direction = true;
-        } else {
-
-            DegreeParam = DegreeHelper;
-            direction = false;
-        }
-
-        int a = userPosition.getFactor() * 2;
-
-        DegreeParam = DegreeParam * userPosition.getFactor();
-        return DegreeParam;
-    }
-
-
-//    private double computeDistance() {
-//        Point vect1 = new Point();
-//        double vertical;
-//        double DistanceParam;
-//
-//        vect1.x = bottomLeftFP.getCenter().x - topLeftFP.getCenter().x;
-//        vect1.y = ((bottomLeftFP.getCenter().y - topLeftFP.getCenter().y));
-//        vertical = (sqrt(vect1.x * vect1.x + vect1.y * vect1.y));
-//        //DistanceParam = (CameraModel.getFactor(Build.MODEL) / vertical) * qrCodeContent.getSize()/20;
-//
-//        return DistanceParam;
-//    }
 
 }

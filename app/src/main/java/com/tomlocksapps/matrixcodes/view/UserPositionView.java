@@ -79,10 +79,6 @@ public class UserPositionView extends View {
 
 
         canvas.save();
-//        canvas.translate(0, -getHeight()/3);
-
-//        canvas.drawRect(getHeight()/2, getWidth()/2, getHeight(), getWidth(), paintw);
-
 
         canvas.drawText(String.format(Locale.getDefault(), "x: %3.2f", globalPosition.x) , (float)  getResources().getDimension(R.dimen.text_size_user_position) * 1, (float) (getHeight() - getResources().getDimension(R.dimen.text_size_user_position) * 1), paintk);
         canvas.drawText(String.format(Locale.getDefault(), "y: %3.2f", globalPosition.y) , (float) (getWidth()) - getResources().getDimension(R.dimen.text_size_user_position) * 5, (float) (getHeight() - getResources().getDimension(R.dimen.text_size_user_position) * 1), paintk);
@@ -97,10 +93,6 @@ public class UserPositionView extends View {
 
         canvas.rotate((float) (-userAngle), getHeight() / 2, getWidth() / 2);
         canvas.drawCircle((float)(getHeight()/2),(float)( getWidth()/2 + distanceNormalized),5,paintb);
-      //  canvas.drawCircle((float)(getHeight()/2),(float)( getWidth()/2 ), (float) (radius*userPosition/maxUserPosition) ,paintStroke);
-
-//        canvas.drawRect(userZoneRect, paintk);
-
 
         canvas.drawLine((float) (getHeight() / 2), (float) (getWidth() / 2), (float) (getHeight() / 2), (float) (getWidth() / 2 + (distanceNormalized)), paintb);
 
@@ -115,7 +107,6 @@ public class UserPositionView extends View {
     @Override
     protected void  onSizeChanged (int w, int h, int oldw, int oldh) {
         radius = Math.min(w / 2, h/2);
-//        qrCodeRect =  new RectF(w/2 - 1*w/4 , h/2 - h/50 ,w/2 + 1*w/4 ,h/2 + h/50);
         qrCodeRect =  new RectF(w/2 - 1*w/20 , h/2 - h/50 ,w/2 + 1*w/20 ,h/2 + h/50);
     }
 

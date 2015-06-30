@@ -17,12 +17,6 @@ public class DistanceDialogFragment extends DialogFragment {
 
     private UserStateController userStateController;
 
-//    public DistanceDialogFragment(UserStateController userStateController) {
-//        this.userStateController = userStateController;
-//    }
-
-
-
     OnDistanceDialogListener onDistanceDialogListener;
 
     public UserStateController getUserStateController() {

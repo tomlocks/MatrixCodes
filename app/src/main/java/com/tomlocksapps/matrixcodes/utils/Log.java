@@ -13,9 +13,6 @@ public class Log {
         android.util.Log.d(APP_TAG , logType + " "+ o.getClass().getName() + " " + message);
     }
 
-
-
-
     public enum LogType {
         LIFECYCLE("Lifecycle: "),
         OPENCV("OpenCV: "),
